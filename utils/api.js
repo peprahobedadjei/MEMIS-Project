@@ -52,10 +52,9 @@ export const refreshAccessToken = async () => {
         const response = await axios.post(`${API_BASE_URL}/login/token-refresh/`, { refresh: refreshToken });
         
         // Extract new tokens
-        const { refresh, access } = response.data;
+        const { access } = response.data;
         
         // Update stored tokens
-        Cookies.set('memis-r', refresh, { secure: true, sameSite: 'Strict', expires: 7 });
         Cookies.set('memis-a', access, { secure: true, sameSite: 'Strict', expires: 7 });
         
         return { success: true, accessToken: access };
