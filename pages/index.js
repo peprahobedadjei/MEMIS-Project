@@ -4,8 +4,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
-import { checkUserSession, loginUser } from './services/api';
-import { logoutUser } from './services/api';
+import { checkUserSession, logoutUser } from '@/utils/api';
 import {
 
   ChevronDown,
@@ -41,7 +40,7 @@ function HomePage() {
 
         const userData = Cookies.get('memis-u');
         if (userData) {
-          setUser(JSON.parse(decodeURIComponent(userData))); 
+          setUser(JSON.parse(decodeURIComponent(userData)));
         }
       } else {
 

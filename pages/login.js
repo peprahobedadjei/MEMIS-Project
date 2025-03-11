@@ -2,9 +2,8 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import { loginUser } from './services/api';
 import { useRouter } from 'next/navigation';
-import { checkUserSession } from './services/api';
+import { checkUserSession,loginUser} from '@/utils/api';
 import Link from 'next/link';
 
 export default function AuthPage() {
