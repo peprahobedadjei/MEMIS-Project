@@ -2,7 +2,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_BASE_URL = 'http://memis-90605b282646.herokuapp.com/api';
+const API_BASE_URL = 'https://memis-90605b282646.herokuapp.com/api';
 
 export const loginUser = async (email, password, rememberMe) => {
     try {
