@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 
 const API_BASE_URL = 'https://memis-90605b282646.herokuapp.com/api';
 
+// Authentication functions
 export const loginUser = async (email, password, rememberMe) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/login/`, { email, password });
@@ -87,7 +88,6 @@ export const checkUserSession = async () => {
     return { success: false, message: 'Session expired. Please log in again.' };
 };
 
-
 export const logoutUser = () => {
     // Clear all authentication cookies
     Cookies.remove('memis-r');
@@ -96,4 +96,286 @@ export const logoutUser = () => {
     
     // Redirect to login page
     window.location.href = '/login';
+};
+
+// Helper function to get authenticated API instance
+const getAuthenticatedApi = () => {
+    const accessToken = Cookies.get('memis-a');
+    return axios.create({
+        baseURL: API_BASE_URL,
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    });
+};
+
+// API request with automatic token refresh
+export const authenticatedRequest = async (method, endpoint, data = null) => {
+    try {
+        let api = getAuthenticatedApi();
+        
+        try {
+            // Try the original request
+            if (method === 'get') {
+                return await api.get(endpoint);
+            } else if (method === 'post') {
+                return await api.post(endpoint, data);
+            } else if (method === 'put') {
+                return await api.put(endpoint, data);
+            } else if (method === 'delete') {
+                return await api.delete(endpoint);
+            }
+        } catch (error) {
+            // If we get a 401 error, try to refresh the token
+            if (error.response && error.response.status === 401) {
+                const refreshResult = await refreshAccessToken();
+                if (refreshResult.success) {
+                    // Create a new API instance with the refreshed token
+                    api = getAuthenticatedApi();
+                    
+                    // Retry the request
+                    if (method === 'get') {
+                        return await api.get(endpoint);
+                    } else if (method === 'post') {
+                        return await api.post(endpoint, data);
+                    } else if (method === 'put') {
+                        return await api.put(endpoint, data);
+                    } else if (method === 'delete') {
+                        return await api.delete(endpoint);
+                    }
+                } else {
+                    // If token refresh fails, redirect to login
+                    window.location.href = '/login';
+                    throw new Error('Authentication failed. Please log in again.');
+                }
+            } else {
+                // If error is not related to authentication, re-throw it
+                throw error;
+            }
+        }
+    } catch (error) {
+        console.error(`API Request Error (${endpoint}):`, error.response?.data || error);
+        throw error;
+    }
+};
+
+// Dashboard API Functions
+
+// Get total equipment count
+export const getTotalEquipment = async () => {
+    try {
+        const response = await authenticatedRequest('get', '/equipment/total/');
+        return { success: true, data: response.data };
+    } catch (error) {
+        return { 
+            success: false, 
+            error: error.response?.data?.detail || 'Failed to fetch total equipment count' 
+        };
+    }
+};
+
+// Get equipment status summary
+export const getEquipmentStatusSummary = async () => {
+    try {
+        const response = await authenticatedRequest('get', '/equipment-status/summary/');
+        return { success: true, data: response.data };
+    } catch (error) {
+        return { 
+            success: false, 
+            error: error.response?.data?.detail || 'Failed to fetch equipment status summary' 
+        };
+    }
+};
+
+// Get equipment types summary
+export const getEquipmentTypesSummary = async () => {
+    try {
+        const response = await authenticatedRequest('get', '/equipment-type/summary/');
+        return { success: true, data: response.data };
+    } catch (error) {
+        return { 
+            success: false, 
+            error: error.response?.data?.detail || 'Failed to fetch equipment types summary' 
+        };
+    }
+};
+
+// Get maintenance activity overview
+export const getMaintenanceActivityOverview = async () => {
+    try {
+        const response = await authenticatedRequest('get', '/maintenance-reports/overview/');
+        return { success: true, data: response.data };
+    } catch (error) {
+        return { 
+            success: false, 
+            error: error.response?.data?.detail || 'Failed to fetch maintenance activity overview' 
+        };
+    }
+};
+
+// Get maintenance schedule (You'll need to create this endpoint on your backend)
+export const getMaintenanceSchedule = async (month, year) => {
+    try {
+        const response = await authenticatedRequest('get', `/maintenance-reports/schedule/?month=${month}&year=${year}`);
+        return { success: true, data: response.data };
+    } catch (error) {
+        return { 
+            success: false, 
+            error: error.response?.data?.detail || 'Failed to fetch maintenance schedule' 
+        };
+    }
+};
+
+// Filter maintenance activity by date range
+export const filterMaintenanceActivity = (activityData, timeRange) => {
+    if (!activityData || !activityData.length) return [];
+    
+    const today = new Date();
+    let startDate;
+    
+    switch (timeRange) {
+        case 'Last 7 days':
+            startDate = new Date(today);
+            startDate.setDate(today.getDate() - 7);
+            break;
+        case 'Last 30 days':
+            startDate = new Date(today);
+            startDate.setDate(today.getDate() - 30);
+            break;
+        case 'Last 3 months':
+        default:
+            startDate = new Date(today);
+            startDate.setMonth(today.getMonth() - 3);
+            break;
+    }
+    
+    // Filter data based on date range
+    return activityData.filter(item => {
+        const itemDate = new Date(item.date);
+        return itemDate >= startDate && itemDate <= today;
+    });
+};
+
+// Format maintenance activity data for charts
+export const formatMaintenanceActivityForChart = (activityData) => {
+    return activityData.map(item => ({
+        date: formatDateForDisplay(item.date),
+        preventive: item.preventive_maintenance,
+        repair: item.repair,
+        calibration: item.calibration
+    }));
+};
+
+// Format date for display (YYYY-MM-DD to DD MMM)
+export const formatDateForDisplay = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'short' });
+    return `${day} ${month}`;
+};
+
+// Format equipment types data for chart
+export const formatEquipmentTypesForChart = (typesData) => {
+    // Define type colors
+    const typeColors = {
+        diagnostic: '#3b82f6', // blue
+        monitoring: '#10b981', // green
+        life_support: '#f97316', // orange
+        therapeutic: '#8b5cf6', // purple
+        lab: '#ec4899', // pink
+        hospital_industrial: '#6b7280', // gray
+        safety_equipment: '#64748b', // slate
+        other: '#1e293b' // dark slate
+    };
+    
+    return Object.entries(typesData)
+        .filter(([key]) => key !== 'total')
+        .map(([key, value]) => ({
+            type: formatEquipmentTypeName(key),
+            count: value,
+            color: typeColors[key] || '#6b7280' // default to gray if no color defined
+        }));
+};
+
+// Format equipment type name for display
+export const formatEquipmentTypeName = (typeName) => {
+    // Convert snake_case to Title Case with spaces
+    return typeName
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+};
+
+// Format equipment status data for pie chart
+export const formatEquipmentStatusForPieChart = (statusData) => {
+    return [
+        { name: 'Functional', value: statusData.functional, color: '#4ade80' }, // green
+        { name: 'Under Maintenance', value: statusData.under_maintenance, color: '#f97316' }, // orange
+        { name: 'Non-functional', value: statusData.non_functional, color: '#ef4444' } // red
+    ];
+};
+
+// Dashboard data fetch helper
+export const fetchDashboardData = async () => {
+    try {
+        // Fetch all data in parallel
+        const [
+            totalEquipmentResponse,
+            equipmentStatusResponse,
+            equipmentTypesResponse,
+            maintenanceActivityResponse
+        ] = await Promise.all([
+            getTotalEquipment(),
+            getEquipmentStatusSummary(),
+            getEquipmentTypesSummary(),
+            getMaintenanceActivityOverview()
+        ]);
+        
+        // Check for any failures
+        if (!totalEquipmentResponse.success) {
+            throw new Error(totalEquipmentResponse.error);
+        }
+        if (!equipmentStatusResponse.success) {
+            throw new Error(equipmentStatusResponse.error);
+        }
+        if (!equipmentTypesResponse.success) {
+            throw new Error(equipmentTypesResponse.error);
+        }
+        if (!maintenanceActivityResponse.success) {
+            throw new Error(maintenanceActivityResponse.error);
+        }
+        
+        // Prepare and format data
+        const formattedMaintenanceActivity = formatMaintenanceActivityForChart(
+            maintenanceActivityResponse.data
+        );
+        
+        const formattedEquipmentTypes = formatEquipmentTypesForChart(
+            equipmentTypesResponse.data
+        );
+        
+        const formattedEquipmentStatus = formatEquipmentStatusForPieChart(
+            equipmentStatusResponse.data
+        );
+        
+        return {
+            success: true,
+            data: {
+                totalEquipment: totalEquipmentResponse.data.total_equipment,
+                equipmentStatus: equipmentStatusResponse.data,
+                equipmentTypes: equipmentTypesResponse.data,
+                formattedEquipmentTypes,
+                formattedEquipmentStatus,
+                maintenanceActivity: maintenanceActivityResponse.data,
+                formattedMaintenanceActivity
+            }
+        };
+    } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        return {
+            success: false,
+            error: error.message || 'Failed to fetch dashboard data'
+        };
+    }
 };
