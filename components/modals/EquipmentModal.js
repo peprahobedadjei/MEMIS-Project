@@ -283,9 +283,9 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
             <p className="mb-4 text-center">Enter the necessary details to register new equipment.</p>
 
             {/* Add a fixed height container with overflow-y-auto for scrolling */}
-            <div className="overflow-y-auto max-h-[60vh]">
+            <div className="overflow-y-auto max-h-[60vh] max-w-[100vh] ">
                 <form onSubmit={handleSubmit} className="space-y-4 px-1">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4 ">
                         <div>
                             <label className="block mb-1">Equipment Image (Optional)</label>
                             <div
