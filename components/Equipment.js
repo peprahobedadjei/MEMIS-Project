@@ -349,7 +349,7 @@ export default function EquipmentAndSuppliers() {
                     <div>
                         <h1 className="text-2xl font-bold mb-6">Equipments</h1>
 
-                        <div className="bg-white rounded-lg shadow overflow-hidden">
+                        <div className="bg-white rounded-lg overflow-hidden">
                             <div className="p-4 flex justify-between items-center">
                                 <div className="relative">
                                     <input
@@ -725,7 +725,7 @@ export default function EquipmentAndSuppliers() {
                     <div>
                         <h1 className="text-2xl font-bold mb-6">Suppliers</h1>
 
-                        <div className="bg-white rounded-lg shadow overflow-hidden">
+                        <div className="bg-white rounded-lg  overflow-hidden">
                             <div className="p-4 flex justify-between items-center">
                                 <div className="relative">
                                     <input
