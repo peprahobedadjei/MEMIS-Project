@@ -31,7 +31,7 @@ const EquipmentModal = ({ isOpen, onClose, onSave, equipment }) => {
             
             if (equipment.supplier) {
                 // If supplier is an object with an id property
-                if (typeof equipment.supplier === 'object' && equipment.supplier.id) {
+                if (typeof equipment.supplier === 'object' && equipment.supplier) {
                     supplierValue = equipment.supplier.id.toString();
                 }
                 // If supplier is already an ID (string or number)
