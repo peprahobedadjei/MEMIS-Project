@@ -145,7 +145,7 @@ export default function AuthPage() {
     }
 
     return (
-        <div className="min-h-screen flex">
+        <div className="min-h-screen flex text-xs">
             <Head>
                 <title>Authentication | MEMIS</title>
             </Head>

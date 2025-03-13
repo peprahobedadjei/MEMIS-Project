@@ -162,7 +162,7 @@ function HomePage() {
                 </div>
                 <input
                   type="text"
-                  className="pl-10 pr-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="pl-10 pr-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-xs"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -195,10 +195,10 @@ function HomePage() {
                     className="h-full w-full object-contain"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-medium text-gray-700">{user?.first_name} {user?.last_name}</span>
-                  <span className="text-sm text-gray-500">{user?.email}</span>
-                  <span className="text-sm text-gray-500">{user?.user_role}</span>
+                <div className="flex flex-col ">
+                  <span className=" text-xs text-gray-700">{user?.first_name} {user?.last_name}</span>
+                  <span className=" text-xs text-gray-500">{user?.email}</span>
+                  <span className="text-xs text-gray-500">{user?.user_role}</span>
                 </div>
                 <ChevronDown className="w-4 h-4 ml-1 text-gray-500" />
               </div>
