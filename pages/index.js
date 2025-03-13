@@ -85,7 +85,7 @@ function HomePage() {
             <nav className="mt-4 flex flex-col gap-2 text-xs">
               <button
                 onClick={() => setActivePage("Dashboard")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-sm font-medium ${activePage === "Dashboard" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Dashboard" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
                   }`}
               >
                 <LayoutDashboard className="w-5 h-5" />
@@ -94,7 +94,7 @@ function HomePage() {
 
               <button
                 onClick={() => setActivePage("Equipments")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-sm font-medium ${activePage === "Equipments" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Equipments" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
                   }`}
               >
                 <Briefcase className="w-5 h-5" />
@@ -103,7 +103,7 @@ function HomePage() {
 
               <button
                 onClick={() => setActivePage("Inventory")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-sm font-medium ${activePage === "Inventory" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Inventory" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
                   }`}
               >
                 <Archive className="w-5 h-5" />
@@ -112,7 +112,7 @@ function HomePage() {
 
               <button
                 onClick={() => setActivePage("Schedules")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-sm font-medium ${activePage === "Schedules" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Schedules" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
                   }`}
               >
                 <CalendarCheck className="w-5 h-5" />
@@ -121,7 +121,7 @@ function HomePage() {
 
               <button
                 onClick={() => setActivePage("Users")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-sm font-medium ${activePage === "Users" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Users" ? "bg-brandActivexs-brandColor font-semibold" : "bg-white text-brandColor"
                   }`}
               >
                 <Users2Icon className="w-5 h-5" />
@@ -130,7 +130,7 @@ function HomePage() {
 
               <button
                 onClick={() => setActivePage("Notifications")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-sm font-medium ${activePage === "Notifications" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Notifications" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
                   }`}
               >
                 <BellIcon className="w-5 h-5" />
@@ -139,7 +139,7 @@ function HomePage() {
 
               <button
                 onClick={logoutUser}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-sm font-medium ${activePage === "Logout" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Logout" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
                   }`}
               >
                 <LogOutIcon className="w-5 h-5" />
