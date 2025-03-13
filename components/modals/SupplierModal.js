@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from './Modals';
-import { createSupplier } from '../../utils/api';
+import { createSupplier, updateSupplier } from '../../utils/api';
 
-const SupplierModal = ({ isOpen, onClose, refreshSuppliers }) => {
+const SupplierModal = ({ isOpen, onClose, refreshSuppliers, editingSupplier = null }) => {
   const [formData, setFormData] = useState({
     company_name: '',
     company_email: '',
@@ -12,6 +12,39 @@ const SupplierModal = ({ isOpen, onClose, refreshSuppliers }) => {
   
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Populate form when editing a supplier
+  useEffect(() => {
+    if (editingSupplier) {
+      setIsEditing(true);
+      // Format the website URL for the form input (remove https:// if present)
+      let website = editingSupplier.website || '';
+      if (website.startsWith('https://')) {
+        website = website.substring(8);
+      } else if (website.startsWith('http://')) {
+        website = website.substring(7);
+      }
+      
+      setFormData({
+        company_name: editingSupplier.company_name || '',
+        company_email: editingSupplier.company_email || '',
+        contact: editingSupplier.contact || '',
+        website: website,
+      });
+    } else {
+      // Reset form for new supplier
+      setIsEditing(false);
+      setFormData({
+        company_name: '',
+        company_email: '',
+        contact: '',
+        website: '',
+      });
+    }
+    // Clear any previous errors
+    setErrors({});
+  }, [editingSupplier, isOpen]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,7 +67,15 @@ const SupplierModal = ({ isOpen, onClose, refreshSuppliers }) => {
         formattedData.website = `https://${formData.website}`;
       }
       
-      const response = await createSupplier(formattedData);
+      let response;
+      
+      if (isEditing && editingSupplier) {
+        // Update existing supplier
+        response = await updateSupplier(editingSupplier.id, formattedData);
+      } else {
+        // Create new supplier
+        response = await createSupplier(formattedData);
+      }
       
       if (response.success) {
         // Reset form
@@ -53,7 +94,7 @@ const SupplierModal = ({ isOpen, onClose, refreshSuppliers }) => {
         if (response.status === 400) {
           setErrors(response.error);
         } else {
-          setErrors({ general: 'Failed to create supplier. Please try again.' });
+          setErrors({ general: `Failed to ${isEditing ? 'update' : 'create'} supplier. Please try again.` });
         }
       }
     } catch (error) {
@@ -65,8 +106,12 @@ const SupplierModal = ({ isOpen, onClose, refreshSuppliers }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="New Supplier">
-      <p className="mb-4 text-center">Enter the accurate details to register a new supplier.</p>
+    <Modal isOpen={isOpen} onClose={onClose} title={isEditing ? "Edit Supplier" : "New Supplier"}>
+      <p className="mb-4 text-center">
+        {isEditing 
+          ? "Update the supplier information below." 
+          : "Enter the accurate details to register a new supplier."}
+      </p>
       
       {errors.general && (
         <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
@@ -178,7 +223,7 @@ const SupplierModal = ({ isOpen, onClose, refreshSuppliers }) => {
               </svg>
               Processing...
             </div>
-          ) : "Save"}
+          ) : isEditing ? "Update" : "Save"}
         </button>
       </form>
     </Modal>

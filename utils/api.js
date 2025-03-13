@@ -539,3 +539,21 @@ export const deleteEquipment = async (id) => {
       };
     }
   };
+
+  export const updateSupplier = async (id, data) => {
+    try {
+      const response = await authenticatedRequest('put', `/suppliers/${id}/`, data);
+      return { 
+        success: true, 
+        data: response.data,
+        status: response.status
+      };
+    } catch (error) {
+      console.error('Update Supplier Error:', error.response?.data || error);
+      return {
+        success: false,
+        error: error.response?.data || 'Failed to update supplier',
+        status: error.response?.status
+      };
+    }
+  };
