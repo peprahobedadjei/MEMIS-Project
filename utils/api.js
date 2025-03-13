@@ -8,19 +8,19 @@ const API_BASE_URL = 'https://memis-90605b282646.herokuapp.com/api';
 export const loginUser = async (email, password, rememberMe) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/login/`, { email, password });
-        
+
         // Extract tokens and user data
         const { refresh, access, user } = response.data;
-        
+
         if (rememberMe) {
             // Securely store tokens in cookies only if rememberMe is checked
             Cookies.set('memis-r', refresh, { secure: true, sameSite: 'Strict', expires: 7 });
             Cookies.set('memis-a', access, { secure: true, sameSite: 'Strict', expires: 7 });
-            
+
             // Store user data in cookies for easy access
             Cookies.set('memis-u', JSON.stringify(user), { secure: true, sameSite: 'Strict', expires: 7 });
         }
-        
+
         return { success: true, data: response.data };
     } catch (error) {
         console.error('Login API Error:', error.response?.data || error);
@@ -51,13 +51,13 @@ export const refreshAccessToken = async () => {
         }
 
         const response = await axios.post(`${API_BASE_URL}/login/token-refresh/`, { refresh: refreshToken });
-        
+
         // Extract new tokens
         const { access } = response.data;
-        
+
         // Update stored tokens
         Cookies.set('memis-a', access, { secure: true, sameSite: 'Strict', expires: 7 });
-        
+
         return { success: true, accessToken: access };
     } catch (error) {
         console.error('Token Refresh Error:', error.response?.data || error);
@@ -76,7 +76,7 @@ export const checkUserSession = async () => {
             return { success: true, message: 'User is authenticated' };
         }
     }
-    
+
     const refreshToken = Cookies.get('memis-r');
     if (refreshToken) {
         const refreshResponse = await refreshAccessToken();
@@ -84,7 +84,7 @@ export const checkUserSession = async () => {
             return await verifyAccessToken(refreshResponse.accessToken);
         }
     }
-    
+
     return { success: false, message: 'Session expired. Please log in again.' };
 };
 
@@ -93,7 +93,7 @@ export const logoutUser = () => {
     Cookies.remove('memis-r');
     Cookies.remove('memis-a');
     Cookies.remove('memis-u');
-    
+
     // Redirect to login page
     window.location.href = '/login';
 };
@@ -114,7 +114,7 @@ const getAuthenticatedApi = () => {
 export const authenticatedRequest = async (method, endpoint, data = null) => {
     try {
         let api = getAuthenticatedApi();
-        
+
         try {
             // Try the original request
             if (method === 'get') {
@@ -133,7 +133,7 @@ export const authenticatedRequest = async (method, endpoint, data = null) => {
                 if (refreshResult.success) {
                     // Create a new API instance with the refreshed token
                     api = getAuthenticatedApi();
-                    
+
                     // Retry the request
                     if (method === 'get') {
                         return await api.get(endpoint);
@@ -168,9 +168,9 @@ export const getTotalEquipment = async () => {
         const response = await authenticatedRequest('get', '/equipment/total/');
         return { success: true, data: response.data };
     } catch (error) {
-        return { 
-            success: false, 
-            error: error.response?.data?.detail || 'Failed to fetch total equipment count' 
+        return {
+            success: false,
+            error: error.response?.data?.detail || 'Failed to fetch total equipment count'
         };
     }
 };
@@ -181,9 +181,9 @@ export const getEquipmentStatusSummary = async () => {
         const response = await authenticatedRequest('get', '/equipment-status/summary/');
         return { success: true, data: response.data };
     } catch (error) {
-        return { 
-            success: false, 
-            error: error.response?.data?.detail || 'Failed to fetch equipment status summary' 
+        return {
+            success: false,
+            error: error.response?.data?.detail || 'Failed to fetch equipment status summary'
         };
     }
 };
@@ -194,9 +194,9 @@ export const getEquipmentTypesSummary = async () => {
         const response = await authenticatedRequest('get', '/equipment-type/summary/');
         return { success: true, data: response.data };
     } catch (error) {
-        return { 
-            success: false, 
-            error: error.response?.data?.detail || 'Failed to fetch equipment types summary' 
+        return {
+            success: false,
+            error: error.response?.data?.detail || 'Failed to fetch equipment types summary'
         };
     }
 };
@@ -207,33 +207,34 @@ export const getMaintenanceActivityOverview = async () => {
         const response = await authenticatedRequest('get', '/maintenance-reports/overview/');
         return { success: true, data: response.data };
     } catch (error) {
-        return { 
-            success: false, 
-            error: error.response?.data?.detail || 'Failed to fetch maintenance activity overview' 
+        return {
+            success: false,
+            error: error.response?.data?.detail || 'Failed to fetch maintenance activity overview'
         };
     }
 };
 
-// Get maintenance schedule (You'll need to create this endpoint on your backend)
-export const getMaintenanceSchedule = async (month, year) => {
+// Get upcoming maintenance schedules
+export const getUpcomingMaintenanceSchedules = async () => {
     try {
-        const response = await authenticatedRequest('get', `/maintenance-reports/schedule/?month=${month}&year=${year}`);
+        const response = await authenticatedRequest('get', '/maintenance/upcoming-schedules/');
         return { success: true, data: response.data };
     } catch (error) {
-        return { 
-            success: false, 
-            error: error.response?.data?.detail || 'Failed to fetch maintenance schedule' 
+        return {
+            success: false,
+            error: error.response?.data?.detail || 'Failed to fetch upcoming maintenance schedules'
         };
     }
 };
+
 
 // Filter maintenance activity by date range
 export const filterMaintenanceActivity = (activityData, timeRange) => {
     if (!activityData || !activityData.length) return [];
-    
+
     const today = new Date();
     let startDate;
-    
+
     switch (timeRange) {
         case 'Last 7 days':
             startDate = new Date(today);
@@ -249,7 +250,7 @@ export const filterMaintenanceActivity = (activityData, timeRange) => {
             startDate.setMonth(today.getMonth() - 3);
             break;
     }
-    
+
     // Filter data based on date range
     return activityData.filter(item => {
         const itemDate = new Date(item.date);
@@ -288,7 +289,7 @@ export const formatEquipmentTypesForChart = (typesData) => {
         safety_equipment: '#64748b', // slate
         other: '#1e293b' // dark slate
     };
-    
+
     return Object.entries(typesData)
         .filter(([key]) => key !== 'total')
         .map(([key, value]) => ({
@@ -316,6 +317,20 @@ export const formatEquipmentStatusForPieChart = (statusData) => {
     ];
 };
 
+// Format upcoming maintenance schedules for display
+export const formatUpcomingMaintenanceSchedules = (schedulesData) => {
+    if (!schedulesData || !schedulesData.length) return [];
+    
+    return schedulesData.map(schedule => ({
+        ...schedule,
+        formattedDate: formatDateForDisplay(schedule.date),
+        // Normalize activity type formatting
+        activityType: schedule.activity_type 
+            ? schedule.activity_type.charAt(0).toUpperCase() + schedule.activity_type.slice(1)
+            : 'General Maintenance'
+    }));
+};
+
 // Dashboard data fetch helper
 export const fetchDashboardData = async () => {
     try {
@@ -324,14 +339,16 @@ export const fetchDashboardData = async () => {
             totalEquipmentResponse,
             equipmentStatusResponse,
             equipmentTypesResponse,
-            maintenanceActivityResponse
+            maintenanceActivityResponse,
+            upcomingSchedulesResponse
         ] = await Promise.all([
             getTotalEquipment(),
             getEquipmentStatusSummary(),
             getEquipmentTypesSummary(),
-            getMaintenanceActivityOverview()
+            getMaintenanceActivityOverview(),
+            getUpcomingMaintenanceSchedules()
         ]);
-        
+
         // Check for any failures
         if (!totalEquipmentResponse.success) {
             throw new Error(totalEquipmentResponse.error);
@@ -345,20 +362,27 @@ export const fetchDashboardData = async () => {
         if (!maintenanceActivityResponse.success) {
             throw new Error(maintenanceActivityResponse.error);
         }
-        
+        if (!upcomingSchedulesResponse.success) {
+            throw new Error(upcomingSchedulesResponse.error);
+        }
+
         // Prepare and format data
         const formattedMaintenanceActivity = formatMaintenanceActivityForChart(
             maintenanceActivityResponse.data
         );
-        
+
         const formattedEquipmentTypes = formatEquipmentTypesForChart(
             equipmentTypesResponse.data
         );
-        
+
         const formattedEquipmentStatus = formatEquipmentStatusForPieChart(
             equipmentStatusResponse.data
         );
         
+        const formattedUpcomingSchedules = formatUpcomingMaintenanceSchedules(
+            upcomingSchedulesResponse.data
+        );
+
         return {
             success: true,
             data: {
@@ -368,7 +392,9 @@ export const fetchDashboardData = async () => {
                 formattedEquipmentTypes,
                 formattedEquipmentStatus,
                 maintenanceActivity: maintenanceActivityResponse.data,
-                formattedMaintenanceActivity
+                formattedMaintenanceActivity,
+                upcomingSchedules: upcomingSchedulesResponse.data,
+                formattedUpcomingSchedules
             }
         };
     } catch (error) {
