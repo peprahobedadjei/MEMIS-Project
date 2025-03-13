@@ -481,3 +481,23 @@ export const getEquipmentList = async () => {
   export const formatDepartment = (department) => {
     return department.charAt(0).toUpperCase() + department.slice(1);
   };
+
+
+  // Create a new supplier
+export const createSupplier = async (supplierData) => {
+    try {
+        const response = await authenticatedRequest('post', '/suppliers/', supplierData);
+        return { 
+            success: true, 
+            data: response.data,
+            status: response.status
+        };
+    } catch (error) {
+        console.error('Create Supplier Error:', error.response?.data || error);
+        return {
+            success: false,
+            error: error.response?.data || 'Failed to create supplier',
+            status: error.response?.status
+        };
+    }
+};
