@@ -9,17 +9,18 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     name: '',
     device_type: '',
-    operational_status: '',
     department: '',
-    location: '',
+    operational_status: '',
     serial_number: '',
-    model: '',
     manufacturer: '',
-    manufacturing_date: '',
+    model: '',
     supplier: '',
     description: '',
     image: '',
     manual: '',
+    manufacturing_date: '',
+    location: '',
+
   });
 
   const [fileNames, setFileNames] = useState({
@@ -139,19 +140,19 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
     
     // Reset form
     setFormData({
-      name: '',
-      device_type: '',
-      operational_status: '',
-      department: '',
-      location: '',
-      serial_number: '',
-      model: '',
-      manufacturer: '',
-      manufacturing_date: '',
-      supplier: '',
-      description: '',
-      image: '',
-      manual: '',
+        name: '',
+        device_type: '',
+        department: '',
+        operational_status: '',
+        serial_number: '',
+        manufacturer: '',
+        model: '',
+        supplier: '',
+        description: '',
+        image: '',
+        manual: '',
+        manufacturing_date: '',
+        location: '',
     });
     
     setFileNames({

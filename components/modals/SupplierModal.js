@@ -71,7 +71,41 @@ const SupplierModal = ({ isOpen, onClose, refreshSuppliers, editingSupplier = nu
       
       if (isEditing && editingSupplier) {
         // Update existing supplier
-        response = await updateSupplier(editingSupplier.id, formattedData);
+        // When updating, we only need to send the fields that have changed
+        const changedData = {};
+        
+        Object.keys(formattedData).forEach(key => {
+          let originalValue = editingSupplier[key];
+          let newValue = formattedData[key];
+          
+          // Special handling for website
+          if (key === 'website') {
+            if (originalValue && originalValue.startsWith('https://')) {
+              originalValue = originalValue.substring(8);
+            } else if (originalValue && originalValue.startsWith('http://')) {
+              originalValue = originalValue.substring(7);
+            }
+            
+            if (newValue && !newValue.startsWith('http')) {
+              newValue = `https://${newValue}`;
+            }
+          }
+          
+          if (newValue !== originalValue) {
+            changedData[key] = formattedData[key];
+          }
+        });
+        
+        // If no changes, just close the modal
+        if (Object.keys(changedData).length === 0) {
+          onClose();
+          return;
+        }
+        
+        // Include the ID in the data to help backend identify this is an update
+        changedData.id = editingSupplier.id;
+        
+        response = await updateSupplier(editingSupplier.id, changedData);
       } else {
         // Create new supplier
         response = await createSupplier(formattedData);
@@ -104,7 +138,6 @@ const SupplierModal = ({ isOpen, onClose, refreshSuppliers, editingSupplier = nu
       setLoading(false);
     }
   };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={isEditing ? "Edit Supplier" : "New Supplier"}>
       <p className="mb-4 text-center">
