@@ -11,7 +11,8 @@ import {
     formatOperationalStatus,
     formatDeviceType,
     formatDepartment,
-    logoutUser
+    logoutUser,
+    deleteEquipment
 } from '../utils/api';
 import { PencilIcon, Trash2 } from 'lucide-react';
 
@@ -23,6 +24,8 @@ export default function EquipmentAndSuppliers() {
     const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
     const [isEquipmentModalOpen, setIsEquipmentModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
+    const [deleteItemType, setDeleteItemType] = useState(''); 
     const [supplierToDelete, setSupplierToDelete] = useState(null);
 
     // Data states
@@ -231,26 +234,49 @@ export default function EquipmentAndSuppliers() {
         setShowTypeDropdown(false);
     };
 
-    // Add this function to handle delete confirmation
-    const handleDeleteSupplier = async () => {
-        if (!supplierToDelete) return;
+ 
 
-        const response = await deleteSupplier(supplierToDelete.id);
-
-        if (response.success) {
+    const handleDeleteItem = async () => {
+        if (!itemToDelete) return;
+        
+        let response;
+        
+        if (deleteItemType === 'supplier') {
+          response = await deleteSupplier(itemToDelete.id);
+          
+          if (response.success) {
 
             setIsDeleteModalOpen(false);
             setSupplierToDelete(null);
             fetchData()
-        } else {
-            console.error('Delete failed:', response.error);
-        }
-    };
+          }
 
-    const openDeleteModal = (supplier) => {
-        setSupplierToDelete(supplier);
+        } else if (deleteItemType === 'equipment') {
+          response = await deleteEquipment(itemToDelete.id);
+          
+          if (response.success) {
+            setIsDeleteModalOpen(false);
+            setSupplierToDelete(null);
+            fetchData()
+          }
+        }
+        
+        if (response && response.success) {
+          setIsDeleteModalOpen(false);
+          setItemToDelete(null);
+
+        } else {
+
+          console.error('Delete failed:', response?.error);
+        }
+      };
+
+
+      const openDeleteModal = (item, type) => {
+        setItemToDelete(item);
+        setDeleteItemType(type);
         setIsDeleteModalOpen(true);
-    };
+      };
 
 
     if (isLoading) {
@@ -610,7 +636,11 @@ export default function EquipmentAndSuppliers() {
 
                                                         <div className='flex space-x-4 cursor-pointer'>
                                                             <PencilIcon size={20} />
-                                                            <Trash2 size={20} className='  text-red-600' />
+                                                            <Trash2 
+      size={20} 
+      className='text-red-600' 
+      onClick={() => openDeleteModal(equipment, 'equipment')}
+    />
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -670,6 +700,18 @@ export default function EquipmentAndSuppliers() {
                                 </div>
                             </div>
                         </div>
+                        <DeleteConfirmationModal
+  isOpen={isDeleteModalOpen}
+  onClose={() => setIsDeleteModalOpen(false)}
+  onConfirm={handleDeleteItem}
+  itemName={
+    itemToDelete 
+      ? `${deleteItemType} "${deleteItemType === 'supplier' 
+          ? itemToDelete.company_name 
+          : itemToDelete.name}"`
+      : `this ${deleteItemType}`
+  }
+/>
                         <EquipmentModal
                             isOpen={isEquipmentModalOpen}
                             onClose={() => setIsEquipmentModalOpen(false)}
@@ -752,11 +794,11 @@ export default function EquipmentAndSuppliers() {
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                     <div className='flex space-x-4 cursor-pointer'>
                                                         <PencilIcon size={20} />
-                                                        <Trash2
-                                                            size={20}
-                                                            className='text-red-600'
-                                                            onClick={() => openDeleteModal(supplier)}
-                                                        />
+                                                        <Trash2 
+      size={20} 
+      className='text-red-600' 
+      onClick={() => openDeleteModal(supplier, 'supplier')}
+    />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -817,11 +859,17 @@ export default function EquipmentAndSuppliers() {
                         </div>
 
                         <DeleteConfirmationModal
-                            isOpen={isDeleteModalOpen}
-                            onClose={() => setIsDeleteModalOpen(false)}
-                            onConfirm={handleDeleteSupplier}
-                            itemName={supplierToDelete ? `supplier "${supplierToDelete.company_name}"` : 'this supplier'}
-                        />
+  isOpen={isDeleteModalOpen}
+  onClose={() => setIsDeleteModalOpen(false)}
+  onConfirm={handleDeleteItem}
+  itemName={
+    itemToDelete 
+      ? `${deleteItemType} "${deleteItemType === 'supplier' 
+          ? itemToDelete.company_name 
+          : itemToDelete.name}"`
+      : `this ${deleteItemType}`
+  }
+/>
 
                         <SupplierModal
                             isOpen={isSupplierModalOpen}
