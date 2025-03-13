@@ -17,7 +17,7 @@ const EquipmentModal = ({ isOpen, onClose, onSave, equipment }) => {
         serial_number: '',
         manufacturer: '',
         model: '',
-        supplier: '',
+        supplier: 0,
         description: '',
         image: '',
         manual: '',
@@ -255,6 +255,7 @@ const EquipmentModal = ({ isOpen, onClose, onSave, equipment }) => {
             if (equipment) {
                 // Call an update API function (you'll need to create this)
                 response = await updateEquipment(equipment.id, finalFormData);
+                console.log(equipment.id ,finalFormData)
             } else {
                 // Create equipment via existing API call
                 response = await createEquipment(finalFormData);

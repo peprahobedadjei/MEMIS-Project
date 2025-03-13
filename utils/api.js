@@ -581,7 +581,7 @@ export const createEquipment = async (equipmentData) => {
     // Create a new Equipment
     export const updateEquipment = async (equipmentId, data) => {
         try {
-            const response = await authenticatedRequest('put',`/suppliers/${equipmentId}/`, data);
+            const response = await authenticatedRequest('put',`/equipment/${equipmentId}/`, data);
             return { 
                 success: true, 
                 data: response.data,
