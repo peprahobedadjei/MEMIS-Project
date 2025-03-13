@@ -101,6 +101,10 @@ export default function EquipmentAndSuppliers() {
         fetchData();
         setCurrentSupplierPage(1);
     };
+    const handleAddEquipment = () => {
+        fetchData();
+        setCurrentEquipmentPage(1);
+    };
     // Handle clicks outside of dropdowns
     useEffect(() => {
         function handleClickOutside(event) {
@@ -726,7 +730,7 @@ export default function EquipmentAndSuppliers() {
                         <EquipmentModal
                             isOpen={isEquipmentModalOpen}
                             onClose={() => setIsEquipmentModalOpen(false)}
-                        // onSave={handleAddSupplier}
+                         onSave={handleAddSupplier}
                         />
                     </div>
                 )}
