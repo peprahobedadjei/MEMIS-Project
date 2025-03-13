@@ -82,7 +82,7 @@ function HomePage() {
             </Link>
 
             {/* Menu */}
-            <nav className="mt-4 flex flex-col gap-2">
+            <nav className="mt-4 flex flex-col gap-2 text-xs">
               <button
                 onClick={() => setActivePage("Dashboard")}
                 className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-sm font-medium ${activePage === "Dashboard" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"

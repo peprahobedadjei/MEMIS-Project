@@ -28,6 +28,11 @@ export default function EquipmentAndSuppliers() {
     const [deleteItemType, setDeleteItemType] = useState('');
     const [supplierToDelete, setSupplierToDelete] = useState(null);
     const [editingSupplier, setEditingSupplier] = useState(null);
+    const [equipmentToEdit, setEquipmentToEdit] = useState(null);
+    const openEquipEditModal = (equipment) => {
+  setEquipmentToEdit(equipment);
+  setIsEquipmentModalOpen(true);
+};
 
     // Data states
     const [equipmentList, setEquipmentList] = useState([]);
@@ -331,13 +336,13 @@ export default function EquipmentAndSuppliers() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 text-xs">
             {/* Tab Navigation */}
             <div className="bg-white border-b">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex">
                         <button
-                            className={`px-4 py-4 font-medium text-sm ${activeTab === 'equipment'
+                            className={`px-4 py-4 font-medium  ${activeTab === 'equipment'
                                 ? 'border-b-2 border-amber-500 text-amber-600'
                                 : 'text-gray-500 hover:text-gray-700'
                                 }`}
@@ -346,7 +351,7 @@ export default function EquipmentAndSuppliers() {
                             Equipment
                         </button>
                         <button
-                            className={`px-4 py-4 font-medium text-sm ${activeTab === 'suppliers'
+                            className={`px-4 py-4 font-medium ${activeTab === 'suppliers'
                                 ? 'border-b-2 border-amber-500 text-amber-600'
                                 : 'text-gray-500 hover:text-gray-700'
                                 }`}
@@ -362,7 +367,7 @@ export default function EquipmentAndSuppliers() {
                 {/* Equipment Content */}
                 {activeTab === 'equipment' && (
                     <div>
-                        <h1 className="text-2xl font-bold mb-6">Equipments</h1>
+                        <h1 className="text-sm font-bold mb-6">Equipments</h1>
 
                         <div className="bg-white rounded-lg overflow-hidden">
                             <div className="p-4 flex justify-between items-center">
@@ -386,7 +391,7 @@ export default function EquipmentAndSuppliers() {
                                     <div className="relative" ref={statusDropdownRef}>
                                         <button
                                             onClick={toggleStatusDropdown}
-                                            className={`inline-flex items-center rounded-md ${statusFilter ? 'bg-amber-50 text-amber-700 border border-amber-300' : 'bg-white'} px-3 py-2 text-sm font-medium text-gray-700 shadow-sm`}
+                                            className={`inline-flex items-center rounded-md ${statusFilter ? 'bg-amber-50 text-amber-700 border border-amber-300' : 'bg-white'} px-3 py-2  font-medium text-gray-700 shadow-sm`}
                                         >
                                             <span className="mr-2">{statusFilter ? formatOperationalStatus(statusFilter).text : 'Status'}</span>
                                             <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -403,7 +408,7 @@ export default function EquipmentAndSuppliers() {
                                                             setShowStatusDropdown(false);
                                                             setCurrentEquipmentPage(1);
                                                         }}
-                                                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                        className="w-full text-left px-4 py-2  text-gray-700 hover:bg-gray-100"
                                                         role="menuitem"
                                                     >
                                                         All Statuses
@@ -417,7 +422,7 @@ export default function EquipmentAndSuppliers() {
                                                                 setShowStatusDropdown(false);
                                                                 setCurrentEquipmentPage(1);
                                                             }}
-                                                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                            className="w-full text-left px-4 py-2  text-gray-700 hover:bg-gray-100"
                                                             role="menuitem"
                                                         >
                                                             {formatOperationalStatus(status).text}
@@ -432,7 +437,7 @@ export default function EquipmentAndSuppliers() {
                                     <div className="relative" ref={typeDropdownRef}>
                                         <button
                                             onClick={toggleTypeDropdown}
-                                            className={`inline-flex items-center rounded-md ${deviceTypeFilter ? 'bg-amber-50 text-amber-700 border border-amber-300' : 'bg-white'} px-3 py-2 text-sm font-medium text-gray-700 shadow-sm`}
+                                            className={`inline-flex items-center rounded-md ${deviceTypeFilter ? 'bg-amber-50 text-amber-700 border border-amber-300' : 'bg-white'} px-3 py-2  font-medium text-gray-700 shadow-sm`}
                                         >
                                             <span className="mr-2">{deviceTypeFilter ? formatDeviceType(deviceTypeFilter) : 'Device Type'}</span>
                                             <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -449,7 +454,7 @@ export default function EquipmentAndSuppliers() {
                                                             setShowTypeDropdown(false);
                                                             setCurrentEquipmentPage(1);
                                                         }}
-                                                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                        className="w-full text-left px-4 py-2  text-gray-700 hover:bg-gray-100"
                                                         role="menuitem"
                                                     >
                                                         All Device Types
@@ -463,7 +468,7 @@ export default function EquipmentAndSuppliers() {
                                                                 setShowTypeDropdown(false);
                                                                 setCurrentEquipmentPage(1);
                                                             }}
-                                                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                            className="w-full text-left px-4 py-2  text-gray-700 hover:bg-gray-100"
                                                             role="menuitem"
                                                         >
                                                             {formatDeviceType(type)}
@@ -478,7 +483,7 @@ export default function EquipmentAndSuppliers() {
                                     <div className="relative" ref={departmentDropdownRef}>
                                         <button
                                             onClick={toggleDepartmentDropdown}
-                                            className={`inline-flex items-center rounded-md ${departmentFilter ? 'bg-amber-50 text-amber-700 border border-amber-300' : 'bg-white'} px-3 py-2 text-sm font-medium text-gray-700 shadow-sm`}
+                                            className={`inline-flex items-center rounded-md ${departmentFilter ? 'bg-amber-50 text-amber-700 border border-amber-300' : 'bg-white'} px-3 py-2  font-medium text-gray-700 shadow-sm`}
                                         >
                                             <span className="mr-2">{departmentFilter ? formatDepartment(departmentFilter) : 'Department'}</span>
                                             <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -495,7 +500,7 @@ export default function EquipmentAndSuppliers() {
                                                             setShowDepartmentDropdown(false);
                                                             setCurrentEquipmentPage(1);
                                                         }}
-                                                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                        className="w-full text-left px-4 py-2  text-gray-700 hover:bg-gray-100"
                                                         role="menuitem"
                                                     >
                                                         All Departments
@@ -509,7 +514,7 @@ export default function EquipmentAndSuppliers() {
                                                                 setShowDepartmentDropdown(false);
                                                                 setCurrentEquipmentPage(1);
                                                             }}
-                                                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                            className="w-full text-left px-4 py-2  text-gray-700 hover:bg-gray-100"
                                                             role="menuitem"
                                                         >
                                                             {formatDepartment(dept)}
@@ -524,7 +529,7 @@ export default function EquipmentAndSuppliers() {
                                     {(statusFilter || deviceTypeFilter || departmentFilter) && (
                                         <button
                                             onClick={resetFilters}
-                                            className="inline-flex items-center rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-200"
+                                            className="inline-flex items-center rounded-md bg-gray-100 px-3 py-2  font-medium text-gray-700 shadow-sm hover:bg-gray-200"
                                         >
                                             <svg className="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -535,7 +540,7 @@ export default function EquipmentAndSuppliers() {
 
                                     <button
                                         onClick={() => setIsEquipmentModalOpen(true)}
-                                        className="inline-flex items-center rounded-md bg-amber-500 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-600"
+                                        className="inline-flex items-center rounded-md bg-amber-500 px-3 py-2  font-medium text-white shadow-sm hover:bg-amber-600"
                                     >
                                         <svg className="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -550,7 +555,7 @@ export default function EquipmentAndSuppliers() {
                                 <div className="px-4 py-2 bg-gray-50 border-t border-b">
                                     <div className="flex flex-wrap gap-2">
                                         {statusFilter && (
-                                            <div className="flex items-center bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-sm">
+                                            <div className="flex items-center bg-amber-50 text-amber-700 px-3 py-1 rounded-full ">
                                                 <span className="mr-1">Status: {formatOperationalStatus(statusFilter).text}</span>
                                                 <button
                                                     onClick={() => setStatusFilter('')}
@@ -564,7 +569,7 @@ export default function EquipmentAndSuppliers() {
                                         )}
 
                                         {deviceTypeFilter && (
-                                            <div className="flex items-center bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-sm">
+                                            <div className="flex items-center bg-amber-50 text-amber-700 px-3 py-1 rounded-full ">
                                                 <span className="mr-1">Type: {formatDeviceType(deviceTypeFilter)}</span>
                                                 <button
                                                     onClick={() => setDeviceTypeFilter('')}
@@ -578,7 +583,7 @@ export default function EquipmentAndSuppliers() {
                                         )}
 
                                         {departmentFilter && (
-                                            <div className="flex items-center bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-sm">
+                                            <div className="flex items-center bg-amber-50 text-amber-700 px-3 py-1 rounded-full ">
                                                 <span className="mr-1">Department: {formatDepartment(departmentFilter)}</span>
                                                 <button
                                                     onClick={() => setDepartmentFilter('')}
@@ -627,16 +632,16 @@ export default function EquipmentAndSuppliers() {
 
                                             return (
                                                 <tr key={equipment.id} className="hover:bg-gray-50">
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    <td className="px-6 py-4 whitespace-nowrap  font-medium text-gray-900">
                                                         {equipment.name}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <td className="px-6 py-4 whitespace-nowrap  text-gray-500">
                                                         {equipment.equipment_id}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <td className="px-6 py-4 whitespace-nowrap  text-gray-500">
                                                         {equipment.serial_number}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <td className="px-6 py-4 whitespace-nowrap  text-gray-500">
                                                         {formatDepartment(equipment.department)}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
@@ -644,13 +649,17 @@ export default function EquipmentAndSuppliers() {
                                                             {status.text}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <td className="px-6 py-4 whitespace-nowrap  text-gray-500">
                                                         {formatDeviceType(equipment.device_type)}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <td className="px-6 py-4 whitespace-nowrap  font-medium">
 
                                                         <div className='flex space-x-4 cursor-pointer'>
-                                                            <PencilIcon size={20} />
+                                                        <PencilIcon 
+  size={20} 
+  className="cursor-pointer"
+  onClick={() => openEquipEditModal(equipment)} 
+/>
                                                             <Trash2
                                                                 size={20}
                                                                 className='text-red-600'
@@ -671,21 +680,21 @@ export default function EquipmentAndSuppliers() {
                                     <button
                                         onClick={() => setCurrentEquipmentPage(Math.max(1, currentEquipmentPage - 1))}
                                         disabled={currentEquipmentPage === 1}
-                                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                                        className="relative inline-flex items-center px-4 py-2 border border-gray-300  font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                                     >
                                         Previous
                                     </button>
                                     <button
                                         onClick={() => setCurrentEquipmentPage(Math.min(totalEquipmentPages, currentEquipmentPage + 1))}
                                         disabled={currentEquipmentPage === totalEquipmentPages}
-                                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300  font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                                     >
                                         Next
                                     </button>
                                 </div>
                                 <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                                     <div>
-                                        <p className="text-sm text-gray-700">
+                                        <p className=" text-gray-700">
                                             Showing <span className="font-medium">{indexOfFirstEquipment + 1}</span> to{' '}
                                             <span className="font-medium">
                                                 {Math.min(indexOfLastEquipment, filteredEquipment.length)}
@@ -694,9 +703,9 @@ export default function EquipmentAndSuppliers() {
                                         </p>
                                     </div>
                                     <div className="flex items-center space-x-2">
-                                        <span className="text-sm text-gray-700">Show</span>
+                                        <span className=" text-gray-700">Show</span>
                                         <select
-                                            className="border rounded px-2 py-1 text-sm"
+                                            className="border rounded px-2 py-1 "
                                             value={itemsPerPage}
                                             onChange={(e) => setItemsPerPage(Number(e.target.value))}
                                         >
@@ -727,18 +736,22 @@ export default function EquipmentAndSuppliers() {
                                     : `this ${deleteItemType}`
                             }
                         />
-                        <EquipmentModal
-                            isOpen={isEquipmentModalOpen}
-                            onClose={() => setIsEquipmentModalOpen(false)}
-                         onSave={handleAddSupplier}
-                        />
+      <EquipmentModal
+  isOpen={isEquipmentModalOpen}
+  onClose={() => {
+    setIsEquipmentModalOpen(false);
+    setEquipmentToEdit(null); // Reset equipment to edit on close
+  }}
+  onSave={handleAddSupplier}
+  equipment={equipmentToEdit} // Pass the equipment to edit
+/>
                     </div>
                 )}
 
                 {/* Suppliers Content */}
                 {activeTab === 'suppliers' && (
                     <div>
-                        <h1 className="text-2xl font-bold mb-6">Suppliers</h1>
+                        <h1 className="text-sm font-bold mb-6">Suppliers</h1>
 
                         <div className="bg-white rounded-lg  overflow-hidden">
                             <div className="p-4 flex justify-between items-center">
@@ -759,7 +772,7 @@ export default function EquipmentAndSuppliers() {
 
                                 <button
                                     onClick={() => setIsSupplierModalOpen(true)}
-                                    className="inline-flex items-center rounded-md bg-amber-500 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-amber-600"
+                                    className="inline-flex items-center rounded-md bg-amber-500 px-3 py-2  font-medium text-white shadow-sm hover:bg-amber-600"
                                 >
                                     <svg className="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -792,21 +805,21 @@ export default function EquipmentAndSuppliers() {
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {currentSuppliers.map((supplier) => (
                                             <tr key={supplier.id} className="hover:bg-gray-50">
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                <td className="px-6 py-4 whitespace-nowrap  font-medium text-gray-900">
                                                     {supplier.company_name}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <td className="px-6 py-4 whitespace-nowrap  text-gray-500">
                                                     {supplier.company_email}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <td className="px-6 py-4 whitespace-nowrap  text-gray-500">
                                                     {supplier.contact}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-500">
+                                                <td className="px-6 py-4 whitespace-nowrap  text-blue-500">
                                                     <a href={supplier.website} target="_blank" rel="noopener noreferrer" className="hover:underline">
                                                         website
                                                     </a>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <td className="px-6 py-4 whitespace-nowrap  font-medium">
                                                     <div className='flex space-x-4 cursor-pointer'>
                                                    
     <PencilIcon 
@@ -832,21 +845,21 @@ export default function EquipmentAndSuppliers() {
                                     <button
                                         onClick={() => setCurrentSupplierPage(Math.max(1, currentSupplierPage - 1))}
                                         disabled={currentSupplierPage === 1}
-                                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                                        className="relative inline-flex items-center px-4 py-2 border border-gray-300  font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                                     >
                                         Previous
                                     </button>
                                     <button
                                         onClick={() => setCurrentSupplierPage(Math.min(totalSupplierPages, currentSupplierPage + 1))}
                                         disabled={currentSupplierPage === totalSupplierPages}
-                                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300  font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                                     >
                                         Next
                                     </button>
                                 </div>
                                 <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                                     <div>
-                                        <p className="text-sm text-gray-700">
+                                        <p className=" text-gray-700">
                                             Showing <span className="font-medium">{indexOfFirstSupplier + 1}</span> to{' '}
                                             <span className="font-medium">
                                                 {Math.min(indexOfLastSupplier, filteredSuppliers.length)}
@@ -855,9 +868,9 @@ export default function EquipmentAndSuppliers() {
                                         </p>
                                     </div>
                                     <div className="flex items-center space-x-2">
-                                        <span className="text-sm text-gray-700">Show</span>
+                                        <span className=" text-gray-700">Show</span>
                                         <select
-                                            className="border rounded px-2 py-1 text-sm"
+                                            className="border rounded px-2 py-1 "
                                             value={itemsPerPage}
                                             onChange={(e) => setItemsPerPage(Number(e.target.value))}
                                         >

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import Modal from './Modals';
-import { getSuppliersList, createEquipment } from '../../utils/api';
+import { getSuppliersList, createEquipment , updateEquipment} from '../../utils/api';
 
-const EquipmentModal = ({ isOpen, onClose, onSave }) => {
+const EquipmentModal = ({ isOpen, onClose, onSave, equipment }) => {
     const CLOUDINARY_CLOUD_NAME = "dr8uzgh5e";
     const CLOUDINARY_UPLOAD_PRESET = "memis_project";
     const [suppliers, setSuppliers] = useState([]);
@@ -24,6 +24,39 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
         manufacturing_date: '',
         location: '',
     });
+    useEffect(() => {
+        if (equipment) {
+            // Properly handle the supplier value for the form
+            let supplierValue = '';
+            
+            if (equipment.supplier) {
+                // If supplier is an object with an id property
+                if (typeof equipment.supplier === 'object' && equipment.supplier.id) {
+                    supplierValue = equipment.supplier.id.toString();
+                }
+                // If supplier is already an ID (string or number)
+                else {
+                    supplierValue = equipment.supplier.toString();
+                }
+            }
+            
+            setFormData({
+                name: equipment.name || '',
+                device_type: equipment.device_type || '',
+                department: equipment.department || '',
+                operational_status: equipment.operational_status || '',
+                serial_number: equipment.serial_number || '',
+                manufacturer: equipment.manufacturer || '',
+                model: equipment.model || '',
+                supplier: supplierValue,
+                description: equipment.description || '',
+                image: equipment.image || '',
+                manual: equipment.manual || '',
+                manufacturing_date: equipment.manufacturing_date || '',
+                location: equipment.location || '',
+            });
+        }
+    }, [equipment]);
 
     const [fileData, setFileData] = useState({
         image: null,
@@ -93,10 +126,10 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
+    
         // Clear the error for this field when the user makes changes
         setErrors(prev => ({ ...prev, [name]: '' }));
-
+    
         // Parse supplier ID as integer if supplier field is changed
         if (name === 'supplier' && value) {
             setFormData((prev) => ({ ...prev, [name]: parseInt(value, 10) }));
@@ -174,6 +207,7 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
         return Object.keys(newErrors).length === 0;
     };
 
+    // Modify the handleSubmit function to handle updates
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -208,13 +242,25 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
         }
 
         // Log the final data being saved
-        console.log("Saving equipment with data:", formData);
+        console.log(`${equipment ? 'Updating' : 'Saving'} equipment with data:`, formData);
+        const finalFormData = {
+            ...formData,
+            supplier: formData.supplier ? parseInt(formData.supplier, 10) : ''
+        };
 
-        // Create equipment via API
         setSubmitting(true);
         try {
-            const response = await createEquipment(formData);
-            console.log("Create equipment response:", response);
+            // Determine whether to create or update
+            let response;
+            if (equipment) {
+                // Call an update API function (you'll need to create this)
+                response = await updateEquipment(equipment.id, finalFormData);
+            } else {
+                // Create equipment via existing API call
+                response = await createEquipment(finalFormData);
+            }
+            
+            console.log(`${equipment ? 'Update' : 'Create'} equipment response:`, response);
 
             if (response.success) {
                 if (onSave) {
@@ -254,7 +300,7 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
                 }
             }
         } catch (error) {
-            console.error("Error creating equipment:", error);
+            console.error(`Error ${equipment ? 'updating' : 'creating'} equipment:`, error);
             // Handle different error responses
             if (error.response && error.response.data) {
                 setErrors(error.response.data);
@@ -280,10 +326,10 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="New Equipment">
-            <p className="mb-4 text-center">Enter the necessary details to register new equipment.</p>
+            <p className="mb-4 text-center text-xs">Enter the necessary details to register new equipment.</p>
 
             {/* Add a fixed height container with overflow-y-auto for scrolling */}
-            <div className="overflow-y-auto max-h-[60vh] max-w-[100vh] ">
+            <div className="overflow-y-auto max-h-[60vh] max-w-[100vh] text-xs">
                 <form onSubmit={handleSubmit} className="space-y-4 px-1">
                     <div className="grid grid-cols-2 gap-4 ">
                         <div>
@@ -305,7 +351,7 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                             </svg>
-                                            <p className="text-sm mt-1">Click to upload an image</p>
+                                            <p className=" mt-1">Click to upload an image</p>
                                             <p className="text-xs text-gray-500">Max: 50MB</p>
                                         </>
                                     )}
@@ -352,7 +398,7 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                             </svg>
-                                            <p className="text-sm mt-1">Click to upload a manual</p>
+                                            <p className=" mt-1">Click to upload a manual</p>
                                             <p className="text-xs text-gray-500">Max: 50MB</p>
                                         </>
                                     )}
@@ -602,7 +648,7 @@ const EquipmentModal = ({ isOpen, onClose, onSave }) => {
             </div>
 
             {/* Put the submit button outside of the scrollable area */}
-            <div className="mt-4 pt-4 border-t">
+            <div className="mt-4 pt-4 border-t text-xs">
                 <button
                     onClick={handleSubmit}
                     disabled={isUploading || submitting}

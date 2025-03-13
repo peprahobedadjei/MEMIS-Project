@@ -140,7 +140,7 @@ const SupplierModal = ({ isOpen, onClose, refreshSuppliers, editingSupplier = nu
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={isEditing ? "Edit Supplier" : "New Supplier"}>
-      <p className="mb-4 text-center">
+      <p className="mb-4 text-center text-xs">
         {isEditing 
           ? "Update the supplier information below." 
           : "Enter the accurate details to register a new supplier."}

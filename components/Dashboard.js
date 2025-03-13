@@ -171,11 +171,11 @@ export default function Dashboard() {
       {/* Header with logout */}
       <header className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8  flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <h1 className="text-sm font-bold text-gray-900">Dashboard</h1>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-xs">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-blue-100 rounded-lg p-4 flex justify-between items-center">
@@ -234,19 +234,19 @@ export default function Dashboard() {
             {/* Maintenance Activity Chart - 2/3 width */}
             <div className="lg:col-span-2 bg-white p-4 rounded-lg shadow">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold">Maintenance Report Overview</h2>
+                <h2 className="text-sm font-bold">Maintenance Report Overview</h2>
                 <select
-                  className="border rounded p-1 text-sm"
+                  className="border rounded p-1 text-xs "
                   value={timeRange}
                   onChange={(e) => setTimeRange(e.target.value)}
                 >
-                  <option>Last 3 months</option>
+                  <option className='text-xs'>Last 3 months</option>
                   <option>Last 30 days</option>
                   <option>Last 7 days</option>
                 </select>
               </div>
 
-              <div className="h-64">
+              <div className="h-64 text-xs">
                 {filteredActivity && filteredActivity.length > 0 ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart
@@ -308,17 +308,17 @@ export default function Dashboard() {
           
 
           {/* Second row - 2 equal columns */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-xs">
             {/* Equipment Types */}
             <div className="bg-white p-4 rounded-lg shadow">
-              <h2 className="text-lg font-bold mb-4">Equipment Types Overview</h2>
+              <h2 className="text-sm font-bold mb-4">Equipment Types Overview</h2>
 
               <div className="space-y-4">
                 {equipmentTypes.map((item, index) => (
                   <div key={index}>
                     <div className="flex justify-between mb-1">
-                      <span className="text-sm">{item.type}</span>
-                      <span className="text-sm font-medium">{item.count}</span>
+                      <span className="">{item.type}</span>
+                      <span className=" font-medium">{item.count}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2.5">
                       <div
@@ -331,16 +331,16 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="bg-white p-4 rounded-lg shadow">
+            <div className="bg-white p-4 rounded-lg shadow text-xs">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold">Maintenance Schedule</h2>
+                <h2 className="text-sm font-bold">Maintenance Schedule</h2>
               </div>
 
               <div className="max-h-96 overflow-y-auto">
                 <table className="min-w-full border-collapse border border-gray-200">
                   {/* Table Header */}
                   <thead>
-                    <tr className="bg-gray-100 text-gray-600 text-sm font-semibold">
+                    <tr className="bg-gray-100 text-gray-600  font-semibold">
                       <th className="border border-gray-200 px-4 py-2 text-left">Title</th>
                       <th className="border border-gray-200 px-4 py-2 text-left">Activity Type</th>
                       <th className="border border-gray-200 px-4 py-2 text-left">Date</th>
@@ -351,14 +351,14 @@ export default function Dashboard() {
                   <tbody>
                     {upcomingSchedules.length > 0 ? (
                       upcomingSchedules.map((item, index) => (
-                        <tr key={index} className="border-t text-sm text-gray-700 hover:bg-gray-50">
+                        <tr key={index} className="border-t  text-gray-700 hover:bg-gray-50">
                           <td className="border border-gray-200 px-4 py-2">
                             <div className="text-gray-500">{item.title}</div>
                             <div className="font-medium">{item.equipment
                             }</div>
                           </td>
                           <td className="border border-gray-200 px-4 py-2 ">
-                            <span className={`p-1 text-xs ${getBadgeColor(item.activityType)}`}>
+                            <span className={`px-1 text-xs ${getBadgeColor(item.activityType)}`}>
                               {item.activityType}
                             </span>
                           </td>

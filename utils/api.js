@@ -577,3 +577,23 @@ export const createEquipment = async (equipmentData) => {
         };
     }
 };
+
+    // Create a new Equipment
+    export const updateEquipment = async (equipmentId, data) => {
+        try {
+            const response = await authenticatedRequest('put',`/suppliers/${equipmentId}/`, data);
+            return { 
+                success: true, 
+                data: response.data,
+                status: response.status
+            };
+        } catch (error) {
+            console.error('Create Supplier Error:', error.response?.data || error);
+            return {
+                success: false,
+                error: error.response?.data || 'Failed to create supplier',
+                status: error.response?.status
+            };
+        }
+    };
+
