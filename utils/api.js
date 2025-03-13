@@ -175,6 +175,20 @@ export const getTotalEquipment = async () => {
     }
 };
 
+
+// Get total inventory count
+export const getTotalInventory = async () => {
+    try {
+      const response = await authenticatedRequest('get', '/inventory/total/');
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Failed to fetch total inventory count'
+      };
+    }
+  };
+
 // Get equipment status summary
 export const getEquipmentStatusSummary = async () => {
     try {
@@ -340,13 +354,15 @@ export const fetchDashboardData = async () => {
             equipmentStatusResponse,
             equipmentTypesResponse,
             maintenanceActivityResponse,
-            upcomingSchedulesResponse
+            upcomingSchedulesResponse,
+            totalInventoryResponse
         ] = await Promise.all([
             getTotalEquipment(),
             getEquipmentStatusSummary(),
             getEquipmentTypesSummary(),
             getMaintenanceActivityOverview(),
-            getUpcomingMaintenanceSchedules()
+            getUpcomingMaintenanceSchedules(),
+            getTotalInventory()
         ]);
 
         // Check for any failures
@@ -365,6 +381,9 @@ export const fetchDashboardData = async () => {
         if (!upcomingSchedulesResponse.success) {
             throw new Error(upcomingSchedulesResponse.error);
         }
+        if (!totalInventoryResponse.success) {
+            throw new Error(totalInventoryResponse.error);
+          }
 
         // Prepare and format data
         const formattedMaintenanceActivity = formatMaintenanceActivityForChart(
@@ -390,6 +409,7 @@ export const fetchDashboardData = async () => {
                 equipmentStatus: equipmentStatusResponse.data,
                 equipmentTypes: equipmentTypesResponse.data,
                 formattedEquipmentTypes,
+                totalInventory: totalInventoryResponse.data.total_items,
                 formattedEquipmentStatus,
                 maintenanceActivity: maintenanceActivityResponse.data,
                 formattedMaintenanceActivity,
@@ -405,3 +425,59 @@ export const fetchDashboardData = async () => {
         };
     }
 };
+
+// Get equipment list
+export const getEquipmentList = async () => {
+    try {
+      const response = await authenticatedRequest('get', '/equipment/');
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Failed to fetch equipment list'
+      };
+    }
+  };
+  
+  // Get suppliers list
+  export const getSuppliersList = async () => {
+    try {
+      const response = await authenticatedRequest('get', '/suppliers/');
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Failed to fetch suppliers list'
+      };
+    }
+  };
+  
+  // Format operational status for display
+  export const formatOperationalStatus = (status) => {
+    switch (status) {
+      case 'functional':
+        return { text: 'Functional', className: 'bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs' };
+        case 'non_functional':
+        return { text: 'Non-Functional', className: 'bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs' };
+      case 'under_maintenance':
+        return { text: 'Under Maintenance', className: 'bg-amber-100 text-amber-800 px-2 py-1 rounded-full text-xs' };
+      case 'decommissioned':
+        return { text: 'Decommissioned', className: 'bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs' };
+      default:
+        return { text: status, className: 'bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs' };
+    }
+  };
+  
+  // Format device type for display
+  export const formatDeviceType = (type) => {
+    // Convert snake_case to Title Case
+    return type
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ') + ' Device';
+  };
+  
+  // Format department name for display
+  export const formatDepartment = (department) => {
+    return department.charAt(0).toUpperCase() + department.slice(1);
+  };

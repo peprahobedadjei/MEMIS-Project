@@ -20,6 +20,7 @@ import {
   BellIcon
 } from 'lucide-react';
 import Dashboard from '@/components/Dashboard';
+import EquipmentAndSuppliers from '@/components/Equipment';
 
 function HomePage() {
   const [user, setUser] = useState(null);
@@ -107,15 +108,6 @@ function HomePage() {
               >
                 <Archive className="w-5 h-5" />
                 Inventory
-              </button>
-
-              <button
-                onClick={() => setActivePage("Analytics")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-sm font-medium ${activePage === "Analytics" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                  }`}
-              >
-                <ChartNoAxesColumnIncreasing className="w-5 h-5" />
-                Analytics
               </button>
 
               <button
@@ -220,23 +212,13 @@ function HomePage() {
             )}
 
             {activePage === "Equipments" && (
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-lg font-medium mb-4">Blog Management</h2>
-                <p>Blog content and management tools will appear here.</p>
-              </div>
+   <EquipmentAndSuppliers/>
             )}
 
             {activePage === "Inventory" && (
               <div className="bg-white p-6 rounded-lg shadow">
                 <h2 className="text-lg font-medium mb-4">User Management</h2>
                 <p>User management tools will appear here.</p>
-              </div>
-            )}
-
-            {activePage === "Analytics" && (
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-lg font-medium mb-4">Product Management</h2>
-                <p>Product management tools will appear here.</p>
               </div>
             )}
 

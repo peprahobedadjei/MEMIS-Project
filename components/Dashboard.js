@@ -29,6 +29,7 @@ export default function Dashboard() {
   const [maintenanceActivity, setMaintenanceActivity] = useState([]);
   const [filteredActivity, setFilteredActivity] = useState([]);
   const [upcomingSchedules, setUpcomingSchedules] = useState([]);
+  const [totalInventory, setTotalInventory] = useState(0);
 
   // Function to get the appropriate badge color based on activity type
   const getBadgeColor = (activityType) => {
@@ -62,6 +63,7 @@ export default function Dashboard() {
           setTotalEquipment(result.data.totalEquipment);
           setEquipmentStatus(result.data.equipmentStatus);
           setEquipmentTypes(result.data.formattedEquipmentTypes);
+          setTotalInventory(result.data.totalInventory);
 
           // Store raw maintenance activity data
           setMaintenanceActivity(result.data.maintenanceActivity);
@@ -191,7 +193,7 @@ export default function Dashboard() {
           <div className="bg-purple-100 rounded-lg p-4 flex justify-between items-center">
             <div>
               <h2 className="text-purple-900 font-medium">Total Inventory Items</h2>
-              <p className="text-2xl font-bold">{totalEquipment}</p>
+              <p className="text-2xl font-bold">{totalInventory}</p>
             </div>
             <div className="bg-purple-900 p-3 rounded-full text-white">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -228,11 +230,11 @@ export default function Dashboard() {
         {/* Main Content Area - 2 rows */}
         <div className="flex flex-col gap-6">
           {/* First row - 2 columns with 2/3 and 1/3 proportions */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  
             {/* Maintenance Activity Chart - 2/3 width */}
             <div className="lg:col-span-2 bg-white p-4 rounded-lg shadow">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold">Maintenance Activity Overview</h2>
+                <h2 className="text-lg font-bold">Maintenance Report Overview</h2>
                 <select
                   className="border rounded p-1 text-sm"
                   value={timeRange}
@@ -303,48 +305,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Equipment Status Pie Chart - 1/3 width */}
-            <div className="bg-white p-4 rounded-lg shadow">
-              <h2 className="text-lg font-bold mb-2">Equipment Operational Status Overview</h2>
-
-              <div className="h-64 flex justify-center">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={[
-                        { name: 'Functional', value: equipmentStatus.functional, color: '#4ade80' },
-                        { name: 'Under Maintenance', value: equipmentStatus.under_maintenance, color: '#f97316' },
-                        { name: 'Non Functional', value: equipmentStatus.non_functional, color: '#ef4444' }
-                      ]}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={30}
-                      outerRadius={80}
-                      paddingAngle={0}
-                      dataKey="value"
-                    >
-                      {[
-                        { name: 'Functional', value: equipmentStatus.functional, color: '#4ade80' },
-                        { name: 'Under Maintenance', value: equipmentStatus.under_maintenance, color: '#f97316' },
-                        { name: 'Non Functional', value: equipmentStatus.non_functional, color: '#ef4444' }
-                      ].map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="flex justify-center">
-                <div className="text-center">
-                  <span className="text-2xl font-bold">{totalEquipment}</span>
-                  <p className="text-sm text-gray-500">Equipment</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          
 
           {/* Second row - 2 equal columns */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
