@@ -501,3 +501,22 @@ export const createSupplier = async (supplierData) => {
         };
     }
 };
+
+// Add this to utils/api.js
+export const deleteSupplier = async (id) => {
+    try {
+      const response = await authenticatedRequest('delete', `/suppliers/${id}/`);
+      return { 
+        success: true, 
+        data: response.data,
+        status: response.status
+      };
+    } catch (error) {
+      console.error('Delete Supplier Error:', error.response?.data || error);
+      return {
+        success: false,
+        error: error.response?.data || 'Failed to delete supplier',
+        status: error.response?.status
+      };
+    }
+  };

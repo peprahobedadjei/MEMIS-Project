@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import SupplierModal from './modals/SupplierModal';
 import EquipmentModal from './modals/EquipmentModal';
+import DeleteConfirmationModal from './modals/DeleteModal';
 import {
+    deleteSupplier,
     checkUserSession,
     getEquipmentList,
     getSuppliersList,
@@ -20,6 +22,8 @@ export default function EquipmentAndSuppliers() {
     const [error, setError] = useState(null);
     const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
     const [isEquipmentModalOpen, setIsEquipmentModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [supplierToDelete, setSupplierToDelete] = useState(null);
 
     // Data states
     const [equipmentList, setEquipmentList] = useState([]);
@@ -227,14 +231,27 @@ export default function EquipmentAndSuppliers() {
         setShowTypeDropdown(false);
     };
 
-    // Add new item handlers
-    const handleAddNewEquipment = () => {
-        router.push('/equipment/add');
+    // Add this function to handle delete confirmation
+    const handleDeleteSupplier = async () => {
+        if (!supplierToDelete) return;
+
+        const response = await deleteSupplier(supplierToDelete.id);
+
+        if (response.success) {
+
+            setIsDeleteModalOpen(false);
+            setSupplierToDelete(null);
+            fetchData()
+        } else {
+            console.error('Delete failed:', response.error);
+        }
     };
 
-    const handleAddNewSupplier = () => {
-        router.push('/suppliers/add');
+    const openDeleteModal = (supplier) => {
+        setSupplierToDelete(supplier);
+        setIsDeleteModalOpen(true);
     };
+
 
     if (isLoading) {
         return (
@@ -733,11 +750,14 @@ export default function EquipmentAndSuppliers() {
                                                     </a>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    <button className="text-gray-500 hover:text-gray-700">
-                                                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
-                                                        </svg>
-                                                    </button>
+                                                    <div className='flex space-x-4 cursor-pointer'>
+                                                        <PencilIcon size={20} />
+                                                        <Trash2
+                                                            size={20}
+                                                            className='text-red-600'
+                                                            onClick={() => openDeleteModal(supplier)}
+                                                        />
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
@@ -795,6 +815,13 @@ export default function EquipmentAndSuppliers() {
                                 </div>
                             </div>
                         </div>
+
+                        <DeleteConfirmationModal
+                            isOpen={isDeleteModalOpen}
+                            onClose={() => setIsDeleteModalOpen(false)}
+                            onConfirm={handleDeleteSupplier}
+                            itemName={supplierToDelete ? `supplier "${supplierToDelete.company_name}"` : 'this supplier'}
+                        />
 
                         <SupplierModal
                             isOpen={isSupplierModalOpen}
