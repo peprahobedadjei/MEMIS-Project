@@ -172,8 +172,8 @@ export default function AuthPage() {
                                         height={40}
                                     />
                                 </div>
-                                <h1 className="text-xl font-semibold text-center mb-1">Login to your Account</h1>
-                                <p className="text-center text-gray-600 text-sm mb-6">Welcome back! Please enter your details.</p>
+                                <h1 className=" font-semibold text-center text-sm mb-1">Login to your Account</h1>
+                                <p className="text-center text-gray-600  mb-6">Welcome back! Please enter your details.</p>
 
                                 <form onSubmit={handleLoginSubmit}>
                                     <div className="mb-4">
@@ -251,7 +251,7 @@ export default function AuthPage() {
                 {formType === 'reset' && (
                     <div className="flex flex-col w-full md:w-1/2">
                         <div className="p-5">
-                            <a href="#" onClick={switchToLogin} className="text-lg font-semibold text-white">Reset password</a>
+                            <a href="#" onClick={switchToLogin} className="text-sm font-semibold text-white">Reset password</a>
                         </div>
                         <div className="flex flex-col justify-center items-center flex-1 p-6">
                             <div className="bg-white rounded-md  w-full max-w-md p-8">
