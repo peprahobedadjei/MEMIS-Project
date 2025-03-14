@@ -23,6 +23,7 @@ import {
 import Dashboard from '@/components/Dashboard';
 import EquipmentAndSuppliers from '@/components/Equipment';
 import Inventory from '@/components/Inventory';
+import Reports from '@/components/Reports';
 
 function HomePage() {
   const [user, setUser] = useState(null);
@@ -253,10 +254,7 @@ function HomePage() {
             {activePage === "Equipments" && <EquipmentAndSuppliers />}
             {activePage === "Inventory" && <Inventory />}
             {activePage === "Reports" && (
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-lg font-medium mb-4">Analytics Dashboard</h2>
-                <p>Analytics dashboard and reports will appear here.</p>
-              </div>
+<Reports/>
             )}
             {activePage === "Schedules" && (
               <div className="bg-white p-6 rounded-lg shadow">
