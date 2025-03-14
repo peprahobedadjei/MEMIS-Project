@@ -104,10 +104,10 @@ const InventoryModal = ({ isOpen, onClose, item, onSave }) => {
   const categories = ['replacement', 'maintenance', 'critical', 'surgical_equipment', 'miscellaneous'];
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 text-xs">
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">{isEditing ? 'Update Inventory' : 'New Inventory'}</h2>
+          <h2 className="text-sm font-bold">{isEditing ? 'Update Inventory' : 'New Inventory'}</h2>
           <button 
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
@@ -128,7 +128,7 @@ const InventoryModal = ({ isOpen, onClose, item, onSave }) => {
         
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-gray-700 mb-1">
               Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -139,12 +139,12 @@ const InventoryModal = ({ isOpen, onClose, item, onSave }) => {
               className={`w-full px-3 py-2 border rounded-md ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
             />
             {errors.name && (
-              <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.name}</p>
             )}
           </div>
           
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-gray-700 mb-1">
               Item Code <span className="text-red-500">*</span>
             </label>
             <input
@@ -155,12 +155,12 @@ const InventoryModal = ({ isOpen, onClose, item, onSave }) => {
               className={`w-full px-3 py-2 border rounded-md ${errors.item_code ? 'border-red-500' : 'border-gray-300'}`}
             />
             {errors.item_code && (
-              <p className="mt-1 text-sm text-red-500">{errors.item_code}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.item_code}</p>
             )}
           </div>
           
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-gray-700 mb-1">
               Category <span className="text-red-500">*</span>
             </label>
             <select
@@ -182,7 +182,7 @@ const InventoryModal = ({ isOpen, onClose, item, onSave }) => {
           </div>
           
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-gray-700 mb-1">
               Quantity <span className="text-red-500">*</span>
             </label>
             <input
@@ -194,12 +194,12 @@ const InventoryModal = ({ isOpen, onClose, item, onSave }) => {
               className={`w-full px-3 py-2 border rounded-md ${errors.quantity ? 'border-red-500' : 'border-gray-300'}`}
             />
             {errors.quantity && (
-              <p className="mt-1 text-sm text-red-500">{errors.quantity}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.quantity}</p>
             )}
           </div>
           
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-gray-700 mb-1">
               Location <span className="text-red-500">*</span>
             </label>
             <input
@@ -210,12 +210,12 @@ const InventoryModal = ({ isOpen, onClose, item, onSave }) => {
               className={`w-full px-3 py-2 border rounded-md ${errors.location ? 'border-red-500' : 'border-gray-300'}`}
             />
             {errors.location && (
-              <p className="mt-1 text-sm text-red-500">{errors.location}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.location}</p>
             )}
           </div>
           
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-gray-700 mb-1">
               Description
             </label>
             <textarea

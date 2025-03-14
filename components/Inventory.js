@@ -21,11 +21,27 @@ const InventoryTable = ({ onEdit, onInventoryChange }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const [searchTerm, setSearchTerm] = useState('');
 
 
-      const handleSave = () => {
+    const handleSave = () => {
         fetchInventoryItems();
-      };
+    };
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1);
+    };
+
+    // Update the filteredItems logic to include the search filter
+const filteredItems = inventoryItems.filter(item => {
+    const matchesSearch = searchTerm 
+        ? item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        : true;
+    const matchesCategory = categoryFilter ? item.category === categoryFilter : true;
+    const matchesStockStatus = stockStatusFilter ? item.stock_status === stockStatusFilter : true;
+    return matchesSearch && matchesCategory && matchesStockStatus;
+});
 
     const fetchInventoryItems = async () => {
         setIsLoading(true);
@@ -66,12 +82,12 @@ const InventoryTable = ({ onEdit, onInventoryChange }) => {
     const handleAddNew = () => {
         setCurrentItem(null);
         setIsModalOpen(true);
-      };
-    
-      const handleEdit = (item) => {
+    };
+
+    const handleEdit = (item) => {
         setCurrentItem(item);
         setIsModalOpen(true);
-      };
+    };
     const confirmDelete = async () => {
         if (!itemToDelete) return;
 
@@ -106,11 +122,7 @@ const InventoryTable = ({ onEdit, onInventoryChange }) => {
         setCurrentPage(1);
     };
 
-    const filteredItems = inventoryItems.filter(item => {
-        const matchesCategory = categoryFilter ? item.category === categoryFilter : true;
-        const matchesStockStatus = stockStatusFilter ? item.stock_status === stockStatusFilter : true;
-        return matchesCategory && matchesStockStatus;
-    });
+
 
     const paginatedItems = filteredItems.slice(
         (currentPage - 1) * itemsPerPage,
@@ -149,6 +161,20 @@ const InventoryTable = ({ onEdit, onInventoryChange }) => {
                 <h2 className="font-bold">Inventory</h2>
                 <div className="flex space-x-4">
 
+                    <div className="relative">
+                    <input
+    type="text"
+    placeholder="Filter by inventory name..."
+    className="border rounded-lg px-3 py-2 pl-10 w-72"
+    value={searchTerm}
+    onChange={handleSearchChange}
+/>
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
 
                     <div>
                         <select
@@ -305,12 +331,12 @@ const InventoryTable = ({ onEdit, onInventoryChange }) => {
                 itemName={itemToDelete ? itemToDelete.name : ''}
             />
 
-<InventoryModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        item={currentItem}
-        onSave={handleSave}
-      />
+            <InventoryModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                item={currentItem}
+                onSave={handleSave}
+            />
         </div>
     );
 };
