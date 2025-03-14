@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { checkUserSession, logoutUser } from '@/utils/api';
 import {
-
   ChevronDown,
   Bell,
   Search,
@@ -17,7 +16,9 @@ import {
   ChartNoAxesColumnIncreasing,
   CalendarCheck,
   Users2Icon,
-  BellIcon
+  BellIcon,
+  GitGraph,
+  File
 } from 'lucide-react';
 import Dashboard from '@/components/Dashboard';
 import EquipmentAndSuppliers from '@/components/Equipment';
@@ -27,10 +28,23 @@ function HomePage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const [activePage, setActivePage] = useState("Dashboard");
-  const [expandedMenu, setExpandedMenu] = useState(null);
+  const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
   const [notificationCount, setNotificationCount] = useState(2);
+
+  // Determine active page based on URL pathname
+  const getActivePage = () => {
+    if (pathname === '/dashboard') return 'Dashboard';
+    if (pathname === '/equipments') return 'Equipments';
+    if (pathname === '/inventory') return 'Inventory';
+    if (pathname === '/reports') return 'Reports';
+    if (pathname === '/schedules') return 'Schedules';
+    if (pathname === '/users') return 'Users';
+    if (pathname === '/notifications') return 'Notifications';
+    return 'Dashboard'; // Default
+  };
+
+  const activePage = getActivePage();
 
   // Check session on component mount
   useEffect(() => {
@@ -39,13 +53,16 @@ function HomePage() {
       const sessionStatus = await checkUserSession();
 
       if (sessionStatus.success) {
-
         const userData = Cookies.get('memis-u');
         if (userData) {
           setUser(JSON.parse(decodeURIComponent(userData)));
         }
+        
+        // Redirect to dashboard if on the root path
+        if (pathname === '/') {
+          router.push('/dashboard');
+        }
       } else {
-
         router.push('/login');
       }
       setLoading(false);
@@ -53,6 +70,18 @@ function HomePage() {
 
     verifySession();
   }, []);
+
+  // Handle navigation
+  const handleNavigation = (page) => {
+    const route = `/${page.toLowerCase()}`;
+    router.push(route);
+  };
+
+  // Handle logout
+  const handleLogout = async () => {
+    await logoutUser();
+    router.push('/login');
+  };
 
   if (loading) {
     return (
@@ -66,10 +95,11 @@ function HomePage() {
       </div>
     );
   }
+
   return (
     <>
       <Head>
-        <title>MEMIS | Portal</title>
+        <title>MEMIS | {activePage}</title>
       </Head>
 
       {/* Main Container */}
@@ -78,78 +108,91 @@ function HomePage() {
         <div className="w-1/5 bg-white flex flex-col justify-between fixed h-full">
           {/* Logo */}
           <div className="p-4">
-            <Link className="block text-teal-600 text-center mb-4" href="/">
+            <Link className="block text-teal-600 text-center mb-4" href="/dashboard">
               <Image src="/assets/logo.svg" alt="logo" width={100} height={100} className="w-32 mx-auto" />
             </Link>
 
             {/* Menu */}
             <nav className="mt-4 flex flex-col gap-2 text-xs">
               <button
-                onClick={() => setActivePage("Dashboard")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Dashboard" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                  }`}
+                onClick={() => handleNavigation("Dashboard")}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
+                  activePage === "Dashboard" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                }`}
               >
                 <LayoutDashboard className="w-5 h-5" />
                 Dashboard
               </button>
 
               <button
-                onClick={() => setActivePage("Equipments")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Equipments" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                  }`}
+                onClick={() => handleNavigation("Equipments")}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
+                  activePage === "Equipments" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                }`}
               >
                 <Briefcase className="w-5 h-5" />
                 Equipments
               </button>
 
               <button
-                onClick={() => setActivePage("Inventory")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Inventory" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                  }`}
+                onClick={() => handleNavigation("Inventory")}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
+                  activePage === "Inventory" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                }`}
               >
                 <Archive className="w-5 h-5" />
                 Inventory
               </button>
 
               <button
-                onClick={() => setActivePage("Schedules")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Schedules" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                  }`}
+                onClick={() => handleNavigation("Reports")}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
+                  activePage === "Reports" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                }`}
+              >
+                <File className="w-5 h-5" />
+                Report
+              </button>
+
+              <button
+                onClick={() => handleNavigation("Schedules")}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
+                  activePage === "Schedules" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                }`}
               >
                 <CalendarCheck className="w-5 h-5" />
                 Schedules
               </button>
 
               <button
-                onClick={() => setActivePage("Users")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Users" ? "bg-brandActivexs-brandColor font-semibold" : "bg-white text-brandColor"
-                  }`}
+                onClick={() => handleNavigation("Users")}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
+                  activePage === "Users" ? "bg-brandActive tex-brandColor font-semibold" : "bg-white text-brandColor"
+                }`}
               >
                 <Users2Icon className="w-5 h-5" />
                 Users
               </button>
 
               <button
-                onClick={() => setActivePage("Notifications")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Notifications" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                  }`}
+                onClick={() => handleNavigation("Notifications")}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
+                  activePage === "Notifications" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                }`}
               >
                 <BellIcon className="w-5 h-5" />
                 Notifications
               </button>
 
               <button
-                onClick={logoutUser}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Logout" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                  }`}
+                onClick={handleLogout}
+                className="flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium bg-white text-brandColor"
               >
                 <LogOutIcon className="w-5 h-5" />
                 Logout
               </button>
             </nav>
           </div>
-
-
         </div>
 
         {/* Main Content - 80% */}
@@ -170,8 +213,6 @@ function HomePage() {
                 />
               </div>
             </div>
-
-
 
             {/* User profile and notifications */}
             <div className="flex items-center space-x-4">
@@ -208,38 +249,33 @@ function HomePage() {
 
           {/* Page Content */}
           <div className="p-6 flex-1 overflow-auto">
-            {activePage === "Dashboard" && (
-              <Dashboard />
-            )}
-
-            {activePage === "Equipments" && (
-   <EquipmentAndSuppliers/>
-            )}
-
-            {activePage === "Inventory" && (
- <Inventory/>
-            )}
-
-            {activePage === "Schedules" && (
+            {activePage === "Dashboard" && <Dashboard />}
+            {activePage === "Equipments" && <EquipmentAndSuppliers />}
+            {activePage === "Inventory" && <Inventory />}
+            {activePage === "Reports" && (
               <div className="bg-white p-6 rounded-lg shadow">
                 <h2 className="text-lg font-medium mb-4">Analytics Dashboard</h2>
                 <p>Analytics dashboard and reports will appear here.</p>
               </div>
             )}
-
+            {activePage === "Schedules" && (
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h2 className="text-lg font-medium mb-4">Schedules</h2>
+                <p>Schedules and calendar will appear here.</p>
+              </div>
+            )}
             {activePage === "Users" && (
               <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-lg font-medium mb-4">System Settings</h2>
-                <p>System settings and configuration options will appear here.</p>
+                <h2 className="text-lg font-medium mb-4">User Management</h2>
+                <p>User management options will appear here.</p>
               </div>
             )}
             {activePage === "Notifications" && (
               <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-lg font-medium mb-4">System Settings</h2>
-                <p>System settings and configuration options will appear here.</p>
+                <h2 className="text-lg font-medium mb-4">Notifications</h2>
+                <p>Notifications will appear here.</p>
               </div>
             )}
-
           </div>
         </div>
       </div>

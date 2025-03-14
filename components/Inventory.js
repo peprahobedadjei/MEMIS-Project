@@ -156,7 +156,7 @@ const filteredItems = inventoryItems.filter(item => {
     }
 
     return (
-        <div className="bg-white rounded-lg shadow-sm p-6 text-sm">
+        <div className="bg-white rounded-lg  p-6 text-sm">
             <div className="flex justify-between items-center mb-6 text-xs">
                 <h2 className="font-bold">Inventory</h2>
                 <div className="flex space-x-4">
