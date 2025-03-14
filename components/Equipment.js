@@ -34,6 +34,16 @@ export default function EquipmentAndSuppliers() {
   setIsEquipmentModalOpen(true);
 };
 
+const handleAddNew = () => {
+    setEditingSupplier(null)
+    setIsSupplierModalOpen(true)
+  };
+  const handleAddNewEquipment = () => {
+    setEquipmentToEdit(null)
+    setIsEquipmentModalOpen(true)
+  };
+
+
     // Data states
     const [equipmentList, setEquipmentList] = useState([]);
     const [suppliersList, setSuppliersList] = useState([]);
@@ -541,7 +551,7 @@ export default function EquipmentAndSuppliers() {
                                     )}
 
                                     <button
-                                        onClick={() => setIsEquipmentModalOpen(true)}
+                                        onClick={() => handleAddNewEquipment()}
                                         className="inline-flex items-center rounded-md bg-amber-500 px-3 py-2  font-medium text-white shadow-sm hover:bg-amber-600"
                                     >
                                         <svg className="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -773,7 +783,7 @@ export default function EquipmentAndSuppliers() {
                                 </div>
 
                                 <button
-                                    onClick={() => setIsSupplierModalOpen(true)}
+                                    onClick={() => handleAddNew()}
                                     className="inline-flex items-center rounded-md bg-amber-500 px-3 py-2  font-medium text-white shadow-sm hover:bg-amber-600"
                                 >
                                     <svg className="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
