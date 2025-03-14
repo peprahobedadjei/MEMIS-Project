@@ -24,6 +24,7 @@ import Dashboard from '@/components/Dashboard';
 import EquipmentAndSuppliers from '@/components/Equipment';
 import Inventory from '@/components/Inventory';
 import Reports from '@/components/Reports';
+import Users from '@/components/Users';
 
 function HomePage() {
   const [user, setUser] = useState(null);
@@ -58,7 +59,7 @@ function HomePage() {
         if (userData) {
           setUser(JSON.parse(decodeURIComponent(userData)));
         }
-        
+
         // Redirect to dashboard if on the root path
         if (pathname === '/') {
           router.push('/dashboard');
@@ -117,9 +118,8 @@ function HomePage() {
             <nav className="mt-4 flex flex-col gap-2 text-xs">
               <button
                 onClick={() => handleNavigation("Dashboard")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
-                  activePage === "Dashboard" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                }`}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Dashboard" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                  }`}
               >
                 <LayoutDashboard className="w-5 h-5" />
                 Dashboard
@@ -127,9 +127,8 @@ function HomePage() {
 
               <button
                 onClick={() => handleNavigation("Equipments")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
-                  activePage === "Equipments" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                }`}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Equipments" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                  }`}
               >
                 <Briefcase className="w-5 h-5" />
                 Equipments
@@ -137,9 +136,8 @@ function HomePage() {
 
               <button
                 onClick={() => handleNavigation("Inventory")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
-                  activePage === "Inventory" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                }`}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Inventory" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                  }`}
               >
                 <Archive className="w-5 h-5" />
                 Inventory
@@ -147,9 +145,8 @@ function HomePage() {
 
               <button
                 onClick={() => handleNavigation("Reports")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
-                  activePage === "Reports" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                }`}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Reports" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                  }`}
               >
                 <File className="w-5 h-5" />
                 Report
@@ -157,9 +154,8 @@ function HomePage() {
 
               <button
                 onClick={() => handleNavigation("Schedules")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
-                  activePage === "Schedules" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                }`}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Schedules" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                  }`}
               >
                 <CalendarCheck className="w-5 h-5" />
                 Schedules
@@ -167,9 +163,8 @@ function HomePage() {
 
               <button
                 onClick={() => handleNavigation("Users")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
-                  activePage === "Users" ? "bg-brandActive tex-brandColor font-semibold" : "bg-white text-brandColor"
-                }`}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Users" ? "bg-brandActive tex-brandColor font-semibold" : "bg-white text-brandColor"
+                  }`}
               >
                 <Users2Icon className="w-5 h-5" />
                 Users
@@ -177,9 +172,8 @@ function HomePage() {
 
               <button
                 onClick={() => handleNavigation("Notifications")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${
-                  activePage === "Notifications" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
-                }`}
+                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Notifications" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
+                  }`}
               >
                 <BellIcon className="w-5 h-5" />
                 Notifications
@@ -231,7 +225,7 @@ function HomePage() {
               <div className="flex items-center">
                 <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden mr-2">
                   <Image
-                    src={user?.avatar || "/assets/avatar.png"} // Use user avatar if available, else default
+                    src={user?.avatar || "/assets/avatar.png"} 
                     alt="User avatar"
                     width={40}
                     height={40}
@@ -254,7 +248,7 @@ function HomePage() {
             {activePage === "Equipments" && <EquipmentAndSuppliers />}
             {activePage === "Inventory" && <Inventory />}
             {activePage === "Reports" && (
-<Reports/>
+              <Reports />
             )}
             {activePage === "Schedules" && (
               <div className="bg-white p-6 rounded-lg shadow">
@@ -263,10 +257,8 @@ function HomePage() {
               </div>
             )}
             {activePage === "Users" && (
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-lg font-medium mb-4">User Management</h2>
-                <p>User management options will appear here.</p>
-              </div>
+<Users/>
+           
             )}
             {activePage === "Notifications" && (
               <div className="bg-white p-6 rounded-lg shadow">
