@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import Dashboard from '@/components/Dashboard';
 import EquipmentAndSuppliers from '@/components/Equipment';
+import Inventory from '@/components/Inventory';
 
 function HomePage() {
   const [user, setUser] = useState(null);
@@ -216,10 +217,7 @@ function HomePage() {
             )}
 
             {activePage === "Inventory" && (
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-lg font-medium mb-4">User Management</h2>
-                <p>User management tools will appear here.</p>
-              </div>
+ <Inventory/>
             )}
 
             {activePage === "Schedules" && (

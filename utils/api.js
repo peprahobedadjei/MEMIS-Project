@@ -597,3 +597,72 @@ export const createEquipment = async (equipmentData) => {
         }
     };
 
+// Get inventory items
+export const getInventoryItems = async () => {
+    try {
+      const response = await authenticatedRequest('get', '/inventory-items/');
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.detail || 'Failed to fetch inventory items'
+      };
+    }
+  };
+  
+  // Create new inventory item
+  export const createInventoryItem = async (itemData) => {
+    try {
+      const response = await authenticatedRequest('post', '/inventory-items/', itemData);
+      return { 
+        success: true, 
+        data: response.data,
+        status: response.status
+      };
+    } catch (error) {
+      console.error('Create Inventory Item Error:', error.response?.data || error);
+      return {
+        success: false,
+        error: error.response?.data || 'Failed to create inventory item',
+        status: error.response?.status
+      };
+    }
+  };
+  
+  // Update inventory item
+  export const updateInventoryItem = async (id, data) => {
+    try {
+      const response = await authenticatedRequest('put', `/inventory-items/${id}/`, data);
+      return { 
+        success: true, 
+        data: response.data,
+        status: response.status
+      };
+    } catch (error) {
+      console.error('Update Inventory Item Error:', error.response?.data || error);
+      return {
+        success: false,
+        error: error.response?.data || 'Failed to update inventory item',
+        status: error.response?.status
+      };
+    }
+  };
+  
+  // Delete inventory item
+  export const deleteInventoryItem = async (id) => {
+    try {
+      const response = await authenticatedRequest('delete', `/inventory-items/${id}/`);
+      return { 
+        success: true, 
+        data: response.data,
+        status: response.status
+      };
+    } catch (error) {
+      console.error('Delete Inventory Item Error:', error.response?.data || error);
+      return {
+        success: false,
+        error: error.response?.data || 'Failed to delete inventory item',
+        status: error.response?.status
+      };
+    }
+  };

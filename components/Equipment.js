@@ -142,6 +142,8 @@ export default function EquipmentAndSuppliers() {
         setDepartmentFilter('');
     };
 
+
+
     // Get unique values for filters from equipment list
     const uniqueStatuses = [...new Set(equipmentList.map(item => item.operational_status))];
     const uniqueTypes = [...new Set(equipmentList.map(item => item.device_type))];
