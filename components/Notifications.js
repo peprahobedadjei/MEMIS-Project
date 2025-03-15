@@ -140,7 +140,7 @@ const Notification = ({
       const url = `http://memis-90605b282646.herokuapp.com${relativePath}`;
       
       const response = await authenticatedRequest('get', relativePath);
-      console.log(response.data)
+      console.log(response.data);
       setScheduleData(response.data);
       setIsModalOpen(true);
     } catch (error) {
@@ -230,6 +230,7 @@ const Notifications = ({ notifications, refreshNotifications }) => {
   });
   const [markingAllAsRead, setMarkingAllAsRead] = useState(false);
   const [openNotificationId, setOpenNotificationId] = useState(null);
+  const [activeTab, setActiveTab] = useState('unread');
 
   // Categorize notifications whenever they change
   useEffect(() => {
@@ -269,75 +270,97 @@ const Notifications = ({ notifications, refreshNotifications }) => {
   };
 
   return (
-    <div className="space-y-6 h-full text-xs">
-      {/* Unread Notifications Section */}
-      <div className="h-1/2">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center">
-            <Bell className="text-brandActive mr-2" size={18} />
-            <h2 className="font-semibold text-sm">Unread Notifications</h2>
-            {categorizedNotifications.unread.length > 0 && (
-              <span className="ml-2 bg-brandActive text-white text-xs px-2 py-1 rounded-full">
-                {categorizedNotifications.unread.length}
-              </span>
-            )}
-          </div>
-          
+    <div className="h-full flex flex-col text-xs">
+      {/* Tab Navigation */}
+      <div className="flex border-b">
+        <button
+          className={`flex items-center px-4 py-3 font-medium ${
+            activeTab === 'unread'
+              ? 'border-b-2 border-brandActive text-brandActive'
+              : 'text-gray-500'
+          }`}
+          onClick={() => setActiveTab('unread')}
+        >
+          <Bell className="mr-2" size={16} />
+          Unread Notifications
           {categorizedNotifications.unread.length > 0 && (
-            <button
-              onClick={markAllAsRead}
-              disabled={markingAllAsRead}
-              className="flex items-center text-sm px-3 py-1 bg-blue-50 text-brandColor rounded-md hover:bg-blue-100"
-            >
-              <CheckSquare size={16} className="mr-1" />
-              {markingAllAsRead ? 'Marking...' : 'Mark All as Read'}
-            </button>
+            <span className="ml-2 bg-brandActive text-white text-xs px-2 py-0.5 rounded-full">
+              {categorizedNotifications.unread.length}
+            </span>
           )}
-        </div>
+        </button>
         
-        <div className="overflow-y-auto h-64 pr-1">
-          {categorizedNotifications.unread.length > 0 ? (
-            categorizedNotifications.unread.map((notification) => (
-              <Notification 
-                key={notification.id} 
-                notification={notification} 
-                refreshNotifications={refreshNotifications}
-                isOpen={openNotificationId === notification.id}
-                onToggle={handleToggleNotification}
-              />
-            ))
-          ) : (
-            <p className="text-center text-gray-500 py-3 bg-gray-50 rounded-lg">No unread notifications</p>
-          )}
-        </div>
-      </div>
-      
-      {/* All Notifications Section */}
-      <div className="h-1/2">
-        <div className="flex items-center mb-3">
-          <h2 className="font-semibold text-sm">All Notifications</h2>
+        <button
+          className={`flex items-center px-4 py-3 font-medium ${
+            activeTab === 'all'
+              ? 'border-b-2 border-brandActive text-brandActive'
+              : 'text-gray-500'
+          }`}
+          onClick={() => setActiveTab('all')}
+        >
+          All Notifications
           {categorizedNotifications.read.length > 0 && (
-            <span className="ml-2 bg-gray-300 text-gray-700 text-xs px-2 py-1 rounded-full">
+            <span className="ml-2 bg-gray-300 text-gray-700 text-xs px-2 py-0.5 rounded-full">
               {categorizedNotifications.read.length}
             </span>
           )}
-        </div>
+        </button>
+      </div>
+      
+      {/* Tab Content */}
+      <div className="flex-grow overflow-hidden">
+        {activeTab === 'unread' && (
+          <div className="h-full flex flex-col">
+            {/* Action Bar */}
+            {categorizedNotifications.unread.length > 0 && (
+              <div className="py-3 px-4 flex justify-end">
+                <button
+                  onClick={markAllAsRead}
+                  disabled={markingAllAsRead}
+                  className="flex items-center text-sm px-3 py-1 bg-blue-50 text-brandColor rounded-md hover:bg-blue-100"
+                >
+                  <CheckSquare size={16} className="mr-1" />
+                  {markingAllAsRead ? 'Marking...' : 'Mark All as Read'}
+                </button>
+              </div>
+            )}
+            
+            {/* Notification List */}
+            <div className="flex-grow overflow-y-auto px-4">
+              {categorizedNotifications.unread.length > 0 ? (
+                categorizedNotifications.unread.map((notification) => (
+                  <Notification 
+                    key={notification.id} 
+                    notification={notification} 
+                    refreshNotifications={refreshNotifications}
+                    isOpen={openNotificationId === notification.id}
+                    onToggle={handleToggleNotification}
+                  />
+                ))
+              ) : (
+                <p className="text-center text-gray-500 py-6 bg-gray-50 rounded-lg mt-4">No unread notifications</p>
+              )}
+            </div>
+          </div>
+        )}
         
-        <div className="overflow-y-auto h-64 pr-1">
-          {categorizedNotifications.read.length > 0 ? (
-            categorizedNotifications.read.map((notification) => (
-              <Notification 
-                key={notification.id} 
-                notification={notification} 
-                refreshNotifications={refreshNotifications}
-                isOpen={openNotificationId === notification.id}
-                onToggle={handleToggleNotification}
-              />
-            ))
-          ) : (
-            <p className="text-center text-gray-500 py-3 bg-gray-50 rounded-lg">No read notifications</p>
-          )}
-        </div>
+        {activeTab === 'all' && (
+          <div className="h-full overflow-y-auto px-4 py-4">
+            {categorizedNotifications.read.length > 0 ? (
+              categorizedNotifications.read.map((notification) => (
+                <Notification 
+                  key={notification.id} 
+                  notification={notification} 
+                  refreshNotifications={refreshNotifications}
+                  isOpen={openNotificationId === notification.id}
+                  onToggle={handleToggleNotification}
+                />
+              ))
+            ) : (
+              <p className="text-center text-gray-500 py-6 bg-gray-50 rounded-lg">No read notifications</p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
