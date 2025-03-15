@@ -98,6 +98,17 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
             [name]: value
         });
         
+
+            // When equipment is selected, fetch its status and set pre_status
+    if (name === 'equipment' && value) {
+        const selectedEquipment = equipmentList.find(eq => eq.id.toString() === value);
+        if (selectedEquipment && selectedEquipment.operational_status) {
+            setFormFields(prev => ({
+                ...prev,
+                pre_status: selectedEquipment.operational_status
+            }));
+        }
+    }
         // Clear field error when user updates the field
         if (fieldErrors[name]) {
             setFieldErrors({
@@ -357,29 +368,30 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                             )}
                         </div>
                         
-                        {/* Pre-Status */}
-                        <div>
-                            <label className="block text-xs font-medium mb-1">
-                                Pre - Status <span className="text-red-500">*</span>
-                            </label>
-                            <select
-                                name="pre_status"
-                                value={formFields.pre_status}
-                                onChange={handleInputChange}
-                                className={`w-full p-2 border rounded-md ${fieldErrors.pre_status ? 'border-red-500' : ''}`}
-                                required
-                            >
-                                <option value="">Select Status</option>
-                                {statusOptions.map(status => (
-                                    <option key={status.value} value={status.value}>
-                                        {status.label}
-                                    </option>
-                                ))}
-                            </select>
-                            {fieldErrors.pre_status && (
-                                <p className="text-red-500 text-xs mt-1">{fieldErrors.pre_status}</p>
-                            )}
-                        </div>
+{/* Pre-Status */}
+<div>
+    <label className="block text-xs font-medium mb-1">
+        Pre - Status <span className="text-red-500">*</span>
+    </label>
+    <select
+        name="pre_status"
+        value={formFields.pre_status}
+        onChange={handleInputChange}
+        className={`w-full p-2 border rounded-md ${fieldErrors.pre_status ? 'border-red-500' : ''}`}
+        required
+        disabled={formFields.equipment !== ''}
+    >
+        <option value="">Select Status</option>
+        {statusOptions.map(status => (
+            <option key={status.value} value={status.value}>
+                {status.label}
+            </option>
+        ))}
+    </select>
+    {fieldErrors.pre_status && (
+        <p className="text-red-500 text-xs mt-1">{fieldErrors.pre_status}</p>
+    )}
+</div>
                         
                         {/* Post-Status */}
                         <div>
