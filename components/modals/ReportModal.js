@@ -82,7 +82,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
             const response = await authenticatedRequest('get', '/users/');
             if (response && response.data) {
                 // Filter only technicians
-                const technicians = response.data.filter(user => user.user_role === 'Technician');
+                const technicians = response.data;
                 setTechnicianList(technicians);
             }
         } catch (err) {
