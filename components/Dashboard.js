@@ -86,7 +86,6 @@ export default function Dashboard() {
 
           // Store and log upcoming maintenance schedules
           setUpcomingSchedules(result.data.formattedUpcomingSchedules);
-          console.log('Upcoming Maintenance Schedules:', result.data.formattedUpcomingSchedules);
 
           setIsLoading(false);
         } else {

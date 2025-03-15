@@ -4,7 +4,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
-import { checkUserSession, logoutUser } from '@/utils/api';
+import { checkUserSession, logoutUser, authenticatedRequest } from '@/utils/api';
 import {
   ChevronDown,
   Bell,
@@ -25,6 +25,9 @@ import EquipmentAndSuppliers from '@/components/Equipment';
 import Inventory from '@/components/Inventory';
 import Reports from '@/components/Reports';
 import Users from '@/components/Users';
+import Notifications from '@/components/Notifications';
+
+
 
 function HomePage() {
   const [user, setUser] = useState(null);
@@ -32,7 +35,10 @@ function HomePage() {
   const router = useRouter();
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
-  const [notificationCount, setNotificationCount] = useState(2);
+  const [notifications, setNotifications] = useState([]);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [lastCheckedTime, setLastCheckedTime] = useState(null);
+
 
   // Determine active page based on URL pathname
   const getActivePage = () => {
@@ -72,6 +78,28 @@ function HomePage() {
 
     verifySession();
   }, []);
+
+// Define the function outside useEffect so it can be used elsewhere
+const fetchAndUpdateNotifications = async () => {
+  try {
+    const response = await authenticatedRequest('get', '/notifications/');
+    const allNotifications = response.data;
+    setNotifications(allNotifications);
+    const unreadCount = allNotifications.filter(notif => !notif.is_read).length;
+    setNotificationCount(unreadCount);
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+  }
+};
+
+// useEffect now just handles the initial fetch and interval
+useEffect(() => {
+  if (user) {
+    fetchAndUpdateNotifications(); // Initial fetch
+    const interval = setInterval(fetchAndUpdateNotifications, 30000);
+    return () => clearInterval(interval);
+  }
+}, [user]);
 
   // Handle navigation
   const handleNavigation = (page) => {
@@ -213,9 +241,12 @@ function HomePage() {
             <div className="flex items-center space-x-4">
               {/* Notification bell */}
               <div className="relative">
-                <Bell className="w-6 h-6 text-gray-600 cursor-pointer" />
+                <Bell
+                  className="w-6 h-6 text-gray-600 cursor-pointer"
+                  onClick={() => router.push('/notifications')}
+                />
                 {notificationCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className=" cursor-pointer absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {notificationCount}
                   </span>
                 )}
@@ -225,7 +256,7 @@ function HomePage() {
               <div className="flex items-center">
                 <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden mr-2">
                   <Image
-                    src={user?.avatar || "/assets/avatar.png"} 
+                    src={user?.avatar || "/assets/avatar.png"}
                     alt="User avatar"
                     width={40}
                     height={40}
@@ -257,15 +288,15 @@ function HomePage() {
               </div>
             )}
             {activePage === "Users" && (
-<Users/>
-           
+              <Users />
+
             )}
-            {activePage === "Notifications" && (
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-lg font-medium mb-4">Notifications</h2>
-                <p>Notifications will appear here.</p>
-              </div>
-            )}
+{activePage === "Notifications" && (
+  <Notifications
+    notifications={notifications} 
+    refreshNotifications={fetchAndUpdateNotifications} 
+  />
+)}
           </div>
         </div>
       </div>
