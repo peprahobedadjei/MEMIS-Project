@@ -12,6 +12,7 @@ const MaintenanceSchedules = () => {
     const [formData, setFormData] = useState({
         id: null,
         equipment: null,
+        activity_type: null,
         for_all_equipment: false,
         technician: null,
         title: '',
@@ -315,20 +316,18 @@ const MaintenanceSchedules = () => {
 
                             <div className="mb-4">
                                 <label className="block text-xs font-medium mb-1">
-                                    Frequency <span className="text-red-500">*</span>
+                                    Activity Type <span className="text-red-500">*</span>
                                 </label>
                                 <select
-                                    name="frequency"
-                                    value={formData.frequency}
+                                    name="activity_type"
+                                    value={formData.activity_type}
                                     onChange={handleInputChange}
                                     className="w-full p-2 border rounded"
                                     required
                                 >
-                                    <option value="once">Once</option>
-                                    <option value="daily">Daily</option>
-                                    <option value="weekly">Weekly</option>
-                                    <option value="biweekly">Biweekly</option>
-                                    <option value="monthly">Monthly</option>
+                                    <option value="preventive maintenance">Preventive Maintenance</option>
+                                    <option value="repair">Repair</option>
+                                    <option value="calibration">Calibration</option>
                                 </select>
                             </div>
 
@@ -429,7 +428,24 @@ const MaintenanceSchedules = () => {
                                     />
                                 </div>
                             </div>
-
+                            <div className="mb-4">
+                                <label className="block text-xs font-medium mb-1">
+                                    Frequency <span className="text-red-500">*</span>
+                                </label>
+                                <select
+                                    name="frequency"
+                                    value={formData.frequency}
+                                    onChange={handleInputChange}
+                                    className="w-full p-2 border rounded"
+                                    required
+                                >
+                                    <option value="once">Once</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="biweekly">Biweekly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
                             {formData.frequency !== 'once' && (
                                 <div className="mb-4">
                                     <label className="block text-sm font-medium mb-1">

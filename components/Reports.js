@@ -15,8 +15,8 @@ function Reports() {
     const [reportsPerPage] = useState(10);
 
     // Date range filter states
-const [startDate, setStartDate] = useState('');
-const [endDate, setEndDate] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     // Add this function to calculate pagination
     const indexOfLastReport = currentPage * reportsPerPage;
@@ -39,13 +39,13 @@ const [endDate, setEndDate] = useState('');
     const [selectedReport, setSelectedReport] = useState(null);
 
     // Handle date range input changes
-const handleStartDateChange = (e) => {
-    setStartDate(e.target.value);
-};
+    const handleStartDateChange = (e) => {
+        setStartDate(e.target.value);
+    };
 
-const handleEndDateChange = (e) => {
-    setEndDate(e.target.value);
-};
+    const handleEndDateChange = (e) => {
+        setEndDate(e.target.value);
+    };
 
     // Form fields
     const [formFields, setFormFields] = useState({
@@ -92,7 +92,7 @@ const handleEndDateChange = (e) => {
             // Add one day to end date to include the end date in range
             const end = new Date(endDate);
             end.setDate(end.getDate() + 1);
-            
+
             filtered = filtered.filter(report => {
                 const reportDate = new Date(report.date_time);
                 return reportDate >= start && reportDate < end;
@@ -105,7 +105,7 @@ const handleEndDateChange = (e) => {
             });
         } else if (endDate) {
             const end = new Date(endDate);
-            end.setDate(end.getDate() + 1); 
+            end.setDate(end.getDate() + 1);
             filtered = filtered.filter(report => {
                 const reportDate = new Date(report.date_time);
                 return reportDate < end;
@@ -113,7 +113,7 @@ const handleEndDateChange = (e) => {
         }
 
         setFilteredReports(filtered);
-    },[searchTerm, selectedEquipment, selectedTechnician, startDate, endDate, reports]);
+    }, [searchTerm, selectedEquipment, selectedTechnician, startDate, endDate, reports]);
 
     const clearFilters = () => {
         setSearchTerm('');
@@ -506,26 +506,26 @@ const handleEndDateChange = (e) => {
                     {/* Search and filter bar */}
                     <div className="flex flex-wrap gap-4 mb-6">
 
-                  
-<div className="flex gap-2 items-center">
-    <div>
-        <input
-            type="date"
-            className="px-4 py-2 border rounded-md"
-            value={startDate}
-            onChange={handleStartDateChange}
-        />
-    </div>
-    <span>to</span>
-    <div>
-        <input
-            type="date"
-            className="px-4 py-2 border rounded-md"
-            value={endDate}
-            onChange={handleEndDateChange}
-        />
-    </div>
-</div>
+
+                        <div className="flex gap-2 items-center">
+                            <div>
+                                <input
+                                    type="date"
+                                    className="px-4 py-2 border rounded-md"
+                                    value={startDate}
+                                    onChange={handleStartDateChange}
+                                />
+                            </div>
+                            <span>to</span>
+                            <div>
+                                <input
+                                    type="date"
+                                    className="px-4 py-2 border rounded-md"
+                                    value={endDate}
+                                    onChange={handleEndDateChange}
+                                />
+                            </div>
+                        </div>
 
                         <div className="flex gap-2">
                             <div className="relative">
@@ -559,11 +559,11 @@ const handleEndDateChange = (e) => {
                             </div>
                         </div>
                         <button
-    onClick={clearFilters}
-    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
->
-    Clear Filters
-</button>
+                            onClick={clearFilters}
+                            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                        >
+                            Clear Filters
+                        </button>
                         <button
                             onClick={openAddModal}
                             className="px-4 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600"
@@ -603,8 +603,8 @@ const handleEndDateChange = (e) => {
 
                                             return (
                                                 <tr key={report.id} className="hover:bg-gray-50">
-                                                    <td className="py-2 px-4 border-b">{formatDateTime(report.date_time)}</td>
-                                                    <td className="py-2 px-4 border-b">{report.equipment_name}</td>
+                                                    <td className="py-4 px-4 border-b">{formatDateTime(report.date_time)}</td>
+                                                    <td className="py-4 px-4 border-b">{report.equipment_name}</td>
                                                     <td className="py-2 px-4 border-b">
                                                         {report.activity_type === 'preventive maintenance'
                                                             ? 'Preventive maintenance'
