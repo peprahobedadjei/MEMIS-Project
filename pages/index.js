@@ -189,6 +189,7 @@ function HomePage() {
                 <CalendarCheck className="w-5 h-5" />
                 Schedules
               </button>
+              {user?.user_role === "Admin" && (
 
               <button
                 onClick={() => handleNavigation("Users")}
@@ -198,7 +199,7 @@ function HomePage() {
                 <Users2Icon className="w-5 h-5" />
                 Users
               </button>
-
+  )}
               <button
                 onClick={() => handleNavigation("Notifications")}
                 className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Notifications" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
