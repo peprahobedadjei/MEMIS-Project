@@ -27,6 +27,7 @@ import Reports from '@/components/Reports';
 import Users from '@/components/Users';
 import Notifications from '@/components/Notifications';
 import MaintenanceSchedules from '@/components/MaintenanceSchedules';
+import Settings from '@/components/Settings';
 
 
 
@@ -50,6 +51,7 @@ function HomePage() {
     if (pathname === '/schedules') return 'Schedules';
     if (pathname === '/users') return 'Users';
     if (pathname === '/notifications') return 'Notifications';
+    if (pathname === '/settings') return 'Settings';
     return 'Dashboard'; // Default
   };
 
@@ -191,15 +193,15 @@ function HomePage() {
               </button>
               {user?.user_role === "Admin" && (
 
-              <button
-                onClick={() => handleNavigation("Users")}
-                className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Users" ? "bg-brandActive tex-brandColor font-semibold" : "bg-white text-brandColor"
-                  }`}
-              >
-                <Users2Icon className="w-5 h-5" />
-                Users
-              </button>
-  )}
+                <button
+                  onClick={() => handleNavigation("Users")}
+                  className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Users" ? "bg-brandActive tex-brandColor font-semibold" : "bg-white text-brandColor"
+                    }`}
+                >
+                  <Users2Icon className="w-5 h-5" />
+                  Users
+                </button>
+              )}
               <button
                 onClick={() => handleNavigation("Notifications")}
                 className={`flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium ${activePage === "Notifications" ? "bg-brandActive text-brandColor font-semibold" : "bg-white text-brandColor"
@@ -265,7 +267,7 @@ function HomePage() {
                     className="h-full w-full object-contain"
                   />
                 </div>
-                <div className="flex flex-col ">
+                <div  onClick={() => router.push('/settings')} className="flex flex-col cursor-pointer ">
                   <span className=" text-xs text-gray-700">{user?.first_name} {user?.last_name}</span>
                   <span className=" text-xs text-gray-500">{user?.email}</span>
                   <span className="text-xs text-gray-500">{user?.user_role}</span>
@@ -294,6 +296,10 @@ function HomePage() {
                 notifications={notifications}
                 refreshNotifications={fetchAndUpdateNotifications}
               />
+            )}
+            {activePage === "Settings" && (
+              <Settings/>
+
             )}
           </div>
         </div>
