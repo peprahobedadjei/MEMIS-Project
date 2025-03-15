@@ -8,7 +8,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
     const [technicianList, setTechnicianList] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
-    
+
     // Field-specific validation errors
     const [fieldErrors, setFieldErrors] = useState({
         equipment: null,
@@ -19,7 +19,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
         post_status: null,
         notes: null
     });
-    
+
     // Form fields
     const [formFields, setFormFields] = useState({
         equipment: '',
@@ -97,18 +97,18 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
             ...formFields,
             [name]: value
         });
-        
 
-            // When equipment is selected, fetch its status and set pre_status
-    if (name === 'equipment' && value) {
-        const selectedEquipment = equipmentList.find(eq => eq.id.toString() === value);
-        if (selectedEquipment && selectedEquipment.operational_status) {
-            setFormFields(prev => ({
-                ...prev,
-                pre_status: selectedEquipment.operational_status
-            }));
+
+        // When equipment is selected, fetch its status and set pre_status
+        if (name === 'equipment' && value) {
+            const selectedEquipment = equipmentList.find(eq => eq.id.toString() === value);
+            if (selectedEquipment && selectedEquipment.operational_status) {
+                setFormFields(prev => ({
+                    ...prev,
+                    pre_status: selectedEquipment.operational_status
+                }));
+            }
         }
-    }
         // Clear field error when user updates the field
         if (fieldErrors[name]) {
             setFieldErrors({
@@ -116,7 +116,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                 [name]: null
             });
         }
-        
+
         // Special handling for date/time to clear date_time error
         if (name === 'date' || name === 'time') {
             setFieldErrors({
@@ -156,7 +156,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
             };
 
             const response = await authenticatedRequest('post', '/maintenance-reports/', reportData);
-            
+
             if (response && response.status === 201) {
                 // Success! Close modal and notify parent component
                 if (onSuccess) onSuccess();
@@ -164,14 +164,14 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
             }
         } catch (err) {
             console.error('Error creating maintenance report:', err);
-            
+
             // Handle validation errors from API
             if (err.response && err.response.data) {
                 const apiErrors = err.response.data;
-                
+
                 // Update field-specific errors
                 const newFieldErrors = { ...fieldErrors };
-                
+
                 Object.keys(apiErrors).forEach(field => {
                     if (Array.isArray(apiErrors[field])) {
                         newFieldErrors[field] = apiErrors[field][0];
@@ -179,7 +179,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                         newFieldErrors[field] = apiErrors[field];
                     }
                 });
-                
+
                 setFieldErrors(newFieldErrors);
             } else {
                 setError('Failed to create maintenance report. Please try again.');
@@ -194,13 +194,13 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
     // Helper function to render form field with error
     const renderFormField = (label, name, type, options = null, required = true) => {
         const errorMessage = fieldErrors[name];
-        
+
         return (
             <div>
                 <label className="block text-xs font-medium mb-1">
                     {label} {required && <span className="text-red-500">*</span>}
                 </label>
-                
+
                 {type === 'select' ? (
                     <select
                         name={name}
@@ -235,7 +235,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                         required={required}
                     />
                 )}
-                
+
                 {errorMessage && (
                     <p className="text-red-500 text-xs mt-1">{errorMessage}</p>
                 )}
@@ -252,15 +252,15 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                         <XIcon size={20} />
                     </button>
                 </div>
-                
+
                 <p className="text-xs text-gray-600 mb-6">Enter the necessary details to add new maintenance report.</p>
-                
+
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         {error}
                     </div>
                 )}
-                
+
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                         {/* Equipment Name */}
@@ -286,7 +286,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                                 <p className="text-red-500 text-xs mt-1">{fieldErrors.equipment}</p>
                             )}
                         </div>
-                        
+
                         {/* Activity Type */}
                         <div>
                             <label className="block text-xs font-medium mb-1">
@@ -310,7 +310,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                                 <p className="text-red-500 text-xs mt-1">{fieldErrors.activity_type}</p>
                             )}
                         </div>
-                        
+
                         {/* Date */}
                         <div>
                             <label className="block text-xs font-medium mb-1">
@@ -328,7 +328,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                                 <p className="text-red-500 text-xs mt-1">{fieldErrors.date_time}</p>
                             )}
                         </div>
-                        
+
                         {/* Time */}
                         <div>
                             <label className="block text-xs font-medium mb-1">
@@ -343,7 +343,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                                 required
                             />
                         </div>
-                        
+
                         {/* Technician */}
                         <div>
                             <label className="block text-xs font-medium mb-1">
@@ -367,32 +367,32 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                                 <p className="text-red-500 text-xs mt-1">{fieldErrors.technician}</p>
                             )}
                         </div>
-                        
-{/* Pre-Status */}
-<div>
-    <label className="block text-xs font-medium mb-1">
-        Pre - Status <span className="text-red-500">*</span>
-    </label>
-    <select
-        name="pre_status"
-        value={formFields.pre_status}
-        onChange={handleInputChange}
-        className={`w-full p-2 border rounded-md ${fieldErrors.pre_status ? 'border-red-500' : ''}`}
-        required
-        disabled={formFields.equipment !== ''}
-    >
-        <option value="">Select Status</option>
-        {statusOptions.map(status => (
-            <option key={status.value} value={status.value}>
-                {status.label}
-            </option>
-        ))}
-    </select>
-    {fieldErrors.pre_status && (
-        <p className="text-red-500 text-xs mt-1">{fieldErrors.pre_status}</p>
-    )}
-</div>
-                        
+
+                        {/* Pre-Status */}
+                        <div>
+                            <label className="block text-xs font-medium mb-1">
+                                Pre - Status <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                                name="pre_status"
+                                value={formFields.pre_status}
+                                onChange={handleInputChange}
+                                className={`w-full p-2 border rounded-md ${fieldErrors.pre_status ? 'border-red-500' : ''}`}
+                                required
+                                disabled={formFields.equipment !== ''}
+                            >
+                                <option value="">Select Status</option>
+                                {statusOptions.map(status => (
+                                    <option key={status.value} value={status.value}>
+                                        {status.label}
+                                    </option>
+                                ))}
+                            </select>
+                            {fieldErrors.pre_status && (
+                                <p className="text-red-500 text-xs mt-1">{fieldErrors.pre_status}</p>
+                            )}
+                        </div>
+
                         {/* Post-Status */}
                         <div>
                             <label className="block text-xs font-medium mb-1">
@@ -416,7 +416,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                             )}
                         </div>
                     </div>
-                    
+
                     {/* Notes */}
                     <div className="mt-4">
                         <label className="block text-xs font-medium mb-1">
@@ -431,7 +431,7 @@ function MaintenanceReportModal({ showModal, closeModal, onSuccess }) {
                             required
                         ></textarea>
                     </div>
-                    
+
                     {/* Submit Button */}
                     <div className="mt-6">
                         <button

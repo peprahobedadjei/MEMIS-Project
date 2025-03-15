@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { authenticatedRequest } from '@/utils/api';
 import React from 'react'
 import Image from 'next/image';
-import { Pencil, PencilIcon, Trash2 } from 'lucide-react';
+import { PencilIcon, Trash2 } from 'lucide-react';
 function Users() {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
