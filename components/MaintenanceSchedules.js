@@ -126,17 +126,22 @@ const MaintenanceSchedules = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         try {
             let response;
             const payload = { ...formData };
-
+            
+            // Remove equipment field when for_all_equipment is true
+            if (payload.for_all_equipment) {
+                delete payload.equipment;
+            }
+    
             if (isEditMode) {
                 response = await authenticatedRequest('put', `/maintenance-schedules/${formData.id}/`, payload);
             } else {
                 response = await authenticatedRequest('post', '/maintenance-schedules/', payload);
             }
-
+    
             fetchSchedules();
             handleCloseModal();
         } catch (error) {
@@ -265,20 +270,6 @@ const MaintenanceSchedules = () => {
                         </button>
                     </div>
 
-                    {/* <div className="flex border rounded">
-                        <button
-                            className={`px-3 py-1 ${viewMode === 'Weekly' ? 'bg-gray-200' : 'bg-white'}`}
-                            onClick={() => setViewMode('Weekly')}
-                        >
-                            Weekly
-                        </button>
-                        <button
-                            className={`px-3 py-1 ${viewMode === 'Monthly' ? 'bg-gray-200' : 'bg-white'}`}
-                            onClick={() => setViewMode('Monthly')}
-                        >
-                            Monthly
-                        </button>
-                    </div> */}
                 </div>
 
                 {isLoading ? (
