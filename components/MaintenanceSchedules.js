@@ -315,7 +315,7 @@ const MaintenanceSchedules = () => {
 
                             <div className="mb-4">
                                 <label className="block text-xs font-medium mb-1">
-                                    Activity Type <span className="text-red-500">*</span>
+                                    Frequency <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     name="frequency"
