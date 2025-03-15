@@ -3,6 +3,7 @@ import { authenticatedRequest } from '@/utils/api';
 import React from 'react'
 import Image from 'next/image';
 import { PencilIcon, Trash2 } from 'lucide-react';
+
 function Users() {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -204,11 +205,12 @@ function Users() {
                   <td className=" px-4 py-2">
                     {new Date(user.date_joined).toLocaleDateString()}
                   </td>
+                  
                   <td className=" px-4 py-2">
                     <div className="flex space-x-2">
                       <button
                         onClick={() => handleEditUser(user)}
-                        className="text-blue-400 text-white p-1 rounded"
+                        className="text-blue-400  p-1 rounded"
                       >
                         <PencilIcon
                           size={20}
@@ -216,7 +218,7 @@ function Users() {
                       </button>
                       <button
                         onClick={() => handleDeleteClick(user)}
-                        className="text-red-500 text-white p-1 rounded"
+                        className="text-red-500  p-1 rounded"
                       >
                         <Trash2 size={18}
                           className="cursor-pointer" />
