@@ -26,6 +26,7 @@ import Inventory from '@/components/Inventory';
 import Reports from '@/components/Reports';
 import Users from '@/components/Users';
 import Notifications from '@/components/Notifications';
+import MaintenanceSchedules from '@/components/MaintenanceSchedules';
 
 
 
@@ -79,27 +80,27 @@ function HomePage() {
     verifySession();
   }, []);
 
-// Define the function outside useEffect so it can be used elsewhere
-const fetchAndUpdateNotifications = async () => {
-  try {
-    const response = await authenticatedRequest('get', '/notifications/');
-    const allNotifications = response.data;
-    setNotifications(allNotifications);
-    const unreadCount = allNotifications.filter(notif => !notif.is_read).length;
-    setNotificationCount(unreadCount);
-  } catch (error) {
-    console.error('Error fetching notifications:', error);
-  }
-};
+  // Define the function outside useEffect so it can be used elsewhere
+  const fetchAndUpdateNotifications = async () => {
+    try {
+      const response = await authenticatedRequest('get', '/notifications/');
+      const allNotifications = response.data;
+      setNotifications(allNotifications);
+      const unreadCount = allNotifications.filter(notif => !notif.is_read).length;
+      setNotificationCount(unreadCount);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
 
-// useEffect now just handles the initial fetch and interval
-useEffect(() => {
-  if (user) {
-    fetchAndUpdateNotifications(); // Initial fetch
-    const interval = setInterval(fetchAndUpdateNotifications, 30000);
-    return () => clearInterval(interval);
-  }
-}, [user]);
+  // useEffect now just handles the initial fetch and interval
+  useEffect(() => {
+    if (user) {
+      fetchAndUpdateNotifications(); // Initial fetch
+      const interval = setInterval(fetchAndUpdateNotifications, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [user]);
 
   // Handle navigation
   const handleNavigation = (page) => {
@@ -224,16 +225,16 @@ useEffect(() => {
           <div className="bg-white p-4 flex justify-between items-center sticky top-0 z-10">
             <div className="flex items-center w-1/3">
               <div className="relative w-full">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Search className="w-5 h-5 text-gray-400" />
-                </div>
-                <input
+                </div> */}
+                {/* <input
                   type="text"
                   className="pl-10 pr-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-xs"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                />
+                /> */}
               </div>
             </div>
 
@@ -268,7 +269,6 @@ useEffect(() => {
                   <span className=" text-xs text-gray-500">{user?.email}</span>
                   <span className="text-xs text-gray-500">{user?.user_role}</span>
                 </div>
-                <ChevronDown className="w-4 h-4 ml-1 text-gray-500" />
               </div>
             </div>
           </div>
@@ -282,21 +282,18 @@ useEffect(() => {
               <Reports />
             )}
             {activePage === "Schedules" && (
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-lg font-medium mb-4">Schedules</h2>
-                <p>Schedules and calendar will appear here.</p>
-              </div>
+              <MaintenanceSchedules />
             )}
             {activePage === "Users" && (
               <Users />
 
             )}
-{activePage === "Notifications" && (
-  <Notifications
-    notifications={notifications} 
-    refreshNotifications={fetchAndUpdateNotifications} 
-  />
-)}
+            {activePage === "Notifications" && (
+              <Notifications
+                notifications={notifications}
+                refreshNotifications={fetchAndUpdateNotifications}
+              />
+            )}
           </div>
         </div>
       </div>
