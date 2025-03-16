@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, ChevronUp, Eye, Bell, CheckSquare, X, Calendar, Clock, User, Monitor } from 'lucide-react';
+import { ChevronDown, ChevronUp, Eye, Bell, CheckSquare, X, Calendar, Clock, User, Monitor, Archive, ArrowDown01, MapPin } from 'lucide-react';
 import { authenticatedRequest } from '@/utils/api';
 
 // Modal component to display schedule details
@@ -19,7 +19,75 @@ const ScheduleModal = ({ isOpen, onClose, scheduleData }) => {
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-xs">
-      <div className="bg-white rounded-lg w-full max-w-lg mx-4 overflow-hidden">
+{scheduleData.stock_status &&(<>
+<h3>      <div className="bg-white rounded-lg w-full max-w-lg mx-4 overflow-hidden">
+        <div className="bg-brandColor text-white px-4 py-3 flex justify-between items-center">
+          <h3 className="font-semibold text-sm">{scheduleData.stock_status}</h3>
+          <button 
+            onClick={onClose}
+            className="text-white hover:text-gray-200"
+          >
+            <X size={20} />
+          </button>
+        </div>
+        
+        <div className="p-6">
+          <div className="mb-6">
+            <p className="text-gray-700 text-xs">{scheduleData.description}</p>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="flex items-start">
+              <Monitor className="text-brandColor mr-3 mt-1" size={18} />
+              <div>
+                <p className="font-medium text-xs text-gray-800">Name</p>
+                <p className="text-gray-600">{scheduleData.name}</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start">
+              <Archive className="text-brandColor mr-3 mt-1" size={18} />
+              <div>
+                <p className="font-medium text-gray-800">Item Code</p>
+                <p className="text-gray-600">{scheduleData.item_code}</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start">
+              <ArrowDown01 className="text-brandColor mr-3 mt-1" size={18} />
+              <div>
+                <p className="font-medium text-gray-800">Quantity</p>
+                <p className="text-gray-600">
+                  {scheduleData.quantity}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start">
+              <MapPin className="text-brandColor mr-3 mt-1" size={18} />
+              <div>
+                <p className="font-medium text-gray-800">Location</p>
+                <p className="text-gray-600">
+                  {scheduleData.location}
+                </p>
+              </div>
+            </div>
+
+          </div>
+          
+          <div className="mt-6 text-right">
+            <button 
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div></h3>
+</>)}
+
+{!scheduleData.stock_status&&(<>
+  <div className="bg-white rounded-lg w-full max-w-lg mx-4 overflow-hidden">
         <div className="bg-brandColor text-white px-4 py-3 flex justify-between items-center">
           <h3 className="font-semibold text-sm">{scheduleData.title}</h3>
           <button 
@@ -86,6 +154,7 @@ const ScheduleModal = ({ isOpen, onClose, scheduleData }) => {
           </div>
         </div>
       </div>
+</>)}
     </div>
   );
 };

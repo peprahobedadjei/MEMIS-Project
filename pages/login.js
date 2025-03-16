@@ -103,8 +103,7 @@ export default function AuthPage() {
                 router.push('/login');
             }, 3000);
             setResetData({
-                password: '',
-                confirmPassword: ''
+                email:''
             })
         } catch (error) {
             setNotification({
