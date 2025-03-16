@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { checkUserSession,loginUser} from '@/utils/api';
 import Link from 'next/link';
+import axios from 'axios';
 
 export default function AuthPage() {
     const [formType, setFormType] = useState('login');
@@ -84,32 +85,31 @@ export default function AuthPage() {
     const handleResetSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            const response = await axios.post(
+                'https://memis-90605b282646.herokuapp.com/api/password-reset/request/',
+                {
+                    email: resetData.email
+                }
+            );
 
-            // For demo - validate passwords match
-            if (resetData.password === resetData.confirmPassword) {
-                setNotification({
-                    type: 'success',
-                    message: 'Password reset successful! You can now login with your new password.'
-                });
+            setNotification({
+                type: 'success',
+                message: 'A Reset Password email has been set your provided email address.'
+            });
 
-                // Reset form after success
-                setTimeout(() => {
-                    setFormType('login');
-                }, 3000);
-            } else {
-                setNotification({
-                    type: 'error',
-                    message: 'Passwords do not match. Please try again.'
-                });
-            }
+            // Redirect to login page after 5 seconds
+            setTimeout(() => {
+                router.push('/login');
+            }, 3000);
+            setResetData({
+                password: '',
+                confirmPassword: ''
+            })
         } catch (error) {
             setNotification({
                 type: 'error',
-                message: 'An error occurred. Please try again.'
+                message: error.response?.data?.message || 'An error occurred. Please try again.'
             });
         } finally {
             setIsLoading(false);
