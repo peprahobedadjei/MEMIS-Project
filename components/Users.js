@@ -338,6 +338,7 @@ function Users() {
                   className="w-full p-2 border rounded"
                   required
                 >
+                  <option value="">Select a Role </option>
                   <option value="Admin">Admin</option>
                   <option value="Technician">Technician</option>
                 </select>
