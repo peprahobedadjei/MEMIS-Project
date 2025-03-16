@@ -18,18 +18,18 @@ function ResetPassword() {
         const searchParams = new URLSearchParams(window.location.search);
         const tokenParam = searchParams.get('token');
         if (tokenParam) {
-          setResetData(prev => ({
-            ...prev,
-            token: tokenParam
-          }));
+            setResetData(prev => ({
+                ...prev,
+                token: tokenParam
+            }));
         }
-      }, []);
+    }, []);
 
-// Update the resetData state to include confirmPassword
-const [resetData, setResetData] = useState({
-    password: '',
-    confirmPassword: ''
-  });
+    // Update the resetData state to include confirmPassword
+    const [resetData, setResetData] = useState({
+        password: '',
+        confirmPassword: ''
+    });
 
     const handleResetChange = (e) => {
         const { name, value } = e.target;
@@ -39,48 +39,52 @@ const [resetData, setResetData] = useState({
         });
     };
 
-// Update the handleResetSubmit function
-const handleResetSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-  
-    // Check if passwords match
-    if (resetData.password !== resetData.confirmPassword) {
-      setNotification({
-        type: 'error',
-        message: 'Passwords do not match. Please try again.'
-      });
-      setIsLoading(false);
-      return;
-    }
-  
-    try {
-      const response = await axios.post(
-        'http://memis-90605b282646.herokuapp.com/api/password-reset/confirm/',
-        {
-          password: resetData.password,
-          token: resetData.token
+    // Update the handleResetSubmit function
+    const handleResetSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        // Check if passwords match
+        if (resetData.password !== resetData.confirmPassword) {
+            setNotification({
+                type: 'error',
+                message: 'Passwords do not match. Please try again.'
+            });
+            setIsLoading(false);
+            return;
         }
-      );
-  
-      setNotification({
-        type: 'success',
-        message: 'Password reset successful! Redirecting to login page...'
-      });
-  
-      // Redirect to login page after 5 seconds
-      setTimeout(() => {
-        router.push('/login');
-      }, 3000);
-    } catch (error) {
-      setNotification({
-        type: 'error',
-        message: error.response?.data?.message || 'An error occurred. Please try again.'
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
+        try {
+            const response = await axios.post(
+                'https://memis-90605b282646.herokuapp.com/api/password-reset/confirm/',
+                {
+                    password: resetData.password,
+                    token: resetData.token
+                }
+            );
+
+            setNotification({
+                type: 'success',
+                message: 'Password reset successful! Redirecting to login page...'
+            });
+
+            // Redirect to login page after 5 seconds
+            setTimeout(() => {
+                router.push('/login');
+            }, 3000);
+            setResetData({
+                password: '',
+                confirmPassword: ''
+            })
+        } catch (error) {
+            setNotification({
+                type: 'error',
+                message: error.response?.data?.message || 'An error occurred. Please try again.'
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
 
     return (
