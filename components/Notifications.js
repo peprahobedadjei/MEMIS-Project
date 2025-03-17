@@ -5,7 +5,7 @@ import { authenticatedRequest } from '@/utils/api';
 // Modal component to display schedule details
 const ScheduleModal = ({ isOpen, onClose, scheduleData }) => {
   if (!isOpen) return null;
-  
+
   const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-US', {
@@ -16,154 +16,154 @@ const ScheduleModal = ({ isOpen, onClose, scheduleData }) => {
       minute: '2-digit'
     });
   };
-  
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-xs">
-{scheduleData.stock_status &&(<>
-<h3>      <div className="bg-white rounded-lg w-full max-w-lg mx-4 overflow-hidden">
-        <div className="bg-brandColor text-white px-4 py-3 flex justify-between items-center">
-          <h3 className="font-semibold text-sm">{scheduleData.stock_status}</h3>
-          <button 
-            onClick={onClose}
-            className="text-white hover:text-gray-200"
-          >
-            <X size={20} />
-          </button>
-        </div>
-        
-        <div className="p-6">
-          <div className="mb-6">
-            <p className="text-gray-700 text-xs">{scheduleData.description}</p>
+      {scheduleData.stock_status && (<>
+        <h3>      <div className="bg-white rounded-lg w-full max-w-lg mx-4 overflow-hidden">
+          <div className="bg-brandColor text-white px-4 py-3 flex justify-between items-center">
+            <h3 className="font-semibold text-sm">{scheduleData.stock_status}</h3>
+            <button
+              onClick={onClose}
+              className="text-white hover:text-gray-200"
+            >
+              <X size={20} />
+            </button>
           </div>
-          
-          <div className="space-y-4">
-            <div className="flex items-start">
-              <Monitor className="text-brandColor mr-3 mt-1" size={18} />
-              <div>
-                <p className="font-medium text-xs text-gray-800">Name</p>
-                <p className="text-gray-600">{scheduleData.name}</p>
-              </div>
+
+          <div className="p-6">
+            <div className="mb-6">
+              <p className="text-gray-700 text-xs">{scheduleData.description}</p>
             </div>
-            
-            <div className="flex items-start">
-              <Archive className="text-brandColor mr-3 mt-1" size={18} />
-              <div>
-                <p className="font-medium text-gray-800">Item Code</p>
-                <p className="text-gray-600">{scheduleData.item_code}</p>
+
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <Monitor className="text-brandColor mr-3 mt-1" size={18} />
+                <div>
+                  <p className="font-medium text-xs text-gray-800">Name</p>
+                  <p className="text-gray-600">{scheduleData.name}</p>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-start">
-              <ArrowDown01 className="text-brandColor mr-3 mt-1" size={18} />
-              <div>
-                <p className="font-medium text-gray-800">Quantity</p>
-                <p className="text-gray-600">
-                  {scheduleData.quantity}
-                </p>
+
+              <div className="flex items-start">
+                <Archive className="text-brandColor mr-3 mt-1" size={18} />
+                <div>
+                  <p className="font-medium text-gray-800">Item Code</p>
+                  <p className="text-gray-600">{scheduleData.item_code}</p>
+                </div>
               </div>
+
+              <div className="flex items-start">
+                <ArrowDown01 className="text-brandColor mr-3 mt-1" size={18} />
+                <div>
+                  <p className="font-medium text-gray-800">Quantity</p>
+                  <p className="text-gray-600">
+                    {scheduleData.quantity}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <MapPin className="text-brandColor mr-3 mt-1" size={18} />
+                <div>
+                  <p className="font-medium text-gray-800">Location</p>
+                  <p className="text-gray-600">
+                    {scheduleData.location}
+                  </p>
+                </div>
+              </div>
+
             </div>
-            <div className="flex items-start">
-              <MapPin className="text-brandColor mr-3 mt-1" size={18} />
-              <div>
-                <p className="font-medium text-gray-800">Location</p>
-                <p className="text-gray-600">
-                  {scheduleData.location}
-                </p>
+
+            <div className="mt-6 text-right">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div></h3>
+      </>)}
+
+      {!scheduleData.stock_status && (<>
+        <div className="bg-white rounded-lg w-full max-w-lg mx-4 overflow-hidden">
+          <div className="bg-brandColor text-white px-4 py-3 flex justify-between items-center">
+            <h3 className="font-semibold text-sm">{scheduleData.title}</h3>
+            <button
+              onClick={onClose}
+              className="text-white hover:text-gray-200"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          <div className="p-6">
+            <div className="mb-6">
+              <p className="text-gray-700 text-xs">{scheduleData.description}</p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <Monitor className="text-brandColor mr-3 mt-1" size={18} />
+                <div>
+                  <p className="font-medium text-xs text-gray-800">Equipment</p>
+                  <p className="text-gray-600">{scheduleData.equipment_name}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start">
+                <User className="text-brandColor mr-3 mt-1" size={18} />
+                <div>
+                  <p className="font-medium text-gray-800">Technician</p>
+                  <p className="text-gray-600">{scheduleData.technician_name}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start">
+                <Calendar className="text-brandColor mr-3 mt-1" size={18} />
+                <div>
+                  <p className="font-medium text-gray-800">Schedule</p>
+                  <p className="text-gray-600">
+                    {formatDateTime(scheduleData.start_date)} - {formatDateTime(scheduleData.end_date)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start">
+                <Clock className="text-brandColor mr-3 mt-1" size={18} />
+                <div>
+                  <p className="font-medium text-gray-800">Frequency</p>
+                  <p className="text-gray-600 capitalize">
+                    {scheduleData.frequency}
+                    {scheduleData.frequency !== "once" && ` (every ${scheduleData.interval} ${scheduleData.frequency === "daily" ? "day(s)" :
+                      scheduleData.frequency === "weekly" ? "week(s)" :
+                        scheduleData.frequency === "monthly" ? "month(s)" : "year(s)"})`}
+                  </p>
+                </div>
               </div>
             </div>
 
-          </div>
-          
-          <div className="mt-6 text-right">
-            <button 
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-            >
-              Close
-            </button>
+            <div className="mt-6 text-right">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
-      </div></h3>
-</>)}
-
-{!scheduleData.stock_status&&(<>
-  <div className="bg-white rounded-lg w-full max-w-lg mx-4 overflow-hidden">
-        <div className="bg-brandColor text-white px-4 py-3 flex justify-between items-center">
-          <h3 className="font-semibold text-sm">{scheduleData.title}</h3>
-          <button 
-            onClick={onClose}
-            className="text-white hover:text-gray-200"
-          >
-            <X size={20} />
-          </button>
-        </div>
-        
-        <div className="p-6">
-          <div className="mb-6">
-            <p className="text-gray-700 text-xs">{scheduleData.description}</p>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="flex items-start">
-              <Monitor className="text-brandColor mr-3 mt-1" size={18} />
-              <div>
-                <p className="font-medium text-xs text-gray-800">Equipment</p>
-                <p className="text-gray-600">{scheduleData.equipment_name}</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start">
-              <User className="text-brandColor mr-3 mt-1" size={18} />
-              <div>
-                <p className="font-medium text-gray-800">Technician</p>
-                <p className="text-gray-600">{scheduleData.technician_name}</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start">
-              <Calendar className="text-brandColor mr-3 mt-1" size={18} />
-              <div>
-                <p className="font-medium text-gray-800">Schedule</p>
-                <p className="text-gray-600">
-                  {formatDateTime(scheduleData.start_date)} - {formatDateTime(scheduleData.end_date)}
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex items-start">
-              <Clock className="text-brandColor mr-3 mt-1" size={18} />
-              <div>
-                <p className="font-medium text-gray-800">Frequency</p>
-                <p className="text-gray-600 capitalize">
-                  {scheduleData.frequency} 
-                  {scheduleData.frequency !== "once" && ` (every ${scheduleData.interval} ${scheduleData.frequency === "daily" ? "day(s)" : 
-                    scheduleData.frequency === "weekly" ? "week(s)" : 
-                    scheduleData.frequency === "monthly" ? "month(s)" : "year(s)"})`}
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-6 text-right">
-            <button 
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-</>)}
+      </>)}
     </div>
   );
 };
 
-const Notification = ({ 
-  notification, 
-  refreshNotifications, 
-  isOpen, 
-  onToggle 
+const Notification = ({
+  notification,
+  refreshNotifications,
+  isOpen,
+  onToggle
 }) => {
   const [isRead, setIsRead] = useState(notification.is_read);
   const [loading, setLoading] = useState(false);
@@ -171,7 +171,7 @@ const Notification = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fetchingSchedule, setFetchingSchedule] = useState(false);
   const wasOpenRef = useRef(false);
-  
+
   // Track when notification changes from open to closed
   useEffect(() => {
     if (wasOpenRef.current && !isOpen && !isRead) {
@@ -194,20 +194,20 @@ const Notification = ({
       setLoading(false);
     }
   };
-  
+
   const fetchScheduleDetails = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (fetchingSchedule) return;
-    
+
     try {
       setFetchingSchedule(true);
       // Extract the relative path from the link
       const relativePath = notification.link.replace('/api', '');
       // Construct the full URL
       const url = `http://memis-90605b282646.herokuapp.com${relativePath}`;
-      
+
       const response = await authenticatedRequest('get', relativePath);
       console.log(response.data);
       setScheduleData(response.data);
@@ -222,20 +222,20 @@ const Notification = ({
   const messageParts = notification.message.split(': ');
   const title = messageParts[0];
   const description = messageParts.length > 1 ? messageParts[1] : '';
-  
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
     });
   };
 
   return (
     <>
       <div className="bg-white rounded-lg border overflow-hidden mb-4 text-xs">
-        <div 
+        <div
           className="p-4 cursor-pointer flex items-center justify-between"
           onClick={() => onToggle(notification.id)}
         >
@@ -245,18 +245,18 @@ const Notification = ({
           </div>
           <div className="flex items-center">
             <span className="text-xs text-gray-500 mr-4">{formatDate(notification.created)}</span>
-            {isOpen ? 
-              <ChevronUp className="text-gray-400" size={20} /> : 
+            {isOpen ?
+              <ChevronUp className="text-gray-400" size={20} /> :
               <ChevronDown className="text-gray-400" size={20} />
             }
           </div>
         </div>
-        
+
         {isOpen && (
           <div className="p-4 pt-0 bg-gray-50">
             <p className="mb-3 text-gray-700">{description}</p>
             <div className="flex justify-between items-center">
-              <button 
+              <button
                 onClick={fetchScheduleDetails}
                 disabled={fetchingSchedule}
                 className="inline-flex items-center text-brandActive"
@@ -264,11 +264,11 @@ const Notification = ({
                 {fetchingSchedule ? 'Loading...' : 'View Schedule'}
               </button>
               {!isRead && (
-                <button 
+                <button
                   onClick={(e) => {
-                    e.stopPropagation(); 
+                    e.stopPropagation();
                     markAsRead();
-                  }} 
+                  }}
                   disabled={loading}
                   className="flex items-center text-sm text-gray-500 hover:text-gray-700"
                 >
@@ -280,9 +280,9 @@ const Notification = ({
           </div>
         )}
       </div>
-      
+
       {scheduleData && (
-        <ScheduleModal 
+        <ScheduleModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           scheduleData={scheduleData}
@@ -306,7 +306,7 @@ const Notifications = ({ notifications, refreshNotifications }) => {
     if (notifications && notifications.length > 0) {
       const unread = notifications.filter(notif => !notif.is_read);
       const read = notifications.filter(notif => notif.is_read);
-      
+
       setCategorizedNotifications({
         unread,
         read
@@ -321,14 +321,14 @@ const Notifications = ({ notifications, refreshNotifications }) => {
   const markAllAsRead = async () => {
     try {
       setMarkingAllAsRead(true);
-      
+
       // Process all unread notifications sequentially
       for (const notification of categorizedNotifications.unread) {
         await authenticatedRequest('put', `/notifications/${notification.id}/`, {
           is_read: true
         });
       }
-      
+
       // Refresh notifications list after all are marked as read
       refreshNotifications();
     } catch (error) {
@@ -343,11 +343,10 @@ const Notifications = ({ notifications, refreshNotifications }) => {
       {/* Tab Navigation */}
       <div className="flex border-b">
         <button
-          className={`flex items-center px-4 py-3 font-medium ${
-            activeTab === 'unread'
+          className={`flex items-center px-4 py-3 font-medium ${activeTab === 'unread'
               ? 'border-b-2 border-brandActive text-brandActive'
               : 'text-gray-500'
-          }`}
+            }`}
           onClick={() => setActiveTab('unread')}
         >
           <Bell className="mr-2" size={16} />
@@ -358,13 +357,12 @@ const Notifications = ({ notifications, refreshNotifications }) => {
             </span>
           )}
         </button>
-        
+
         <button
-          className={`flex items-center px-4 py-3 font-medium ${
-            activeTab === 'all'
+          className={`flex items-center px-4 py-3 font-medium ${activeTab === 'all'
               ? 'border-b-2 border-brandActive text-brandActive'
               : 'text-gray-500'
-          }`}
+            }`}
           onClick={() => setActiveTab('all')}
         >
           All Notifications
@@ -375,7 +373,7 @@ const Notifications = ({ notifications, refreshNotifications }) => {
           )}
         </button>
       </div>
-      
+
       {/* Tab Content */}
       <div className="flex-grow overflow-hidden">
         {activeTab === 'unread' && (
@@ -393,14 +391,14 @@ const Notifications = ({ notifications, refreshNotifications }) => {
                 </button>
               </div>
             )}
-            
+
             {/* Notification List */}
             <div className="flex-grow overflow-y-auto px-4">
               {categorizedNotifications.unread.length > 0 ? (
                 categorizedNotifications.unread.map((notification) => (
-                  <Notification 
-                    key={notification.id} 
-                    notification={notification} 
+                  <Notification
+                    key={notification.id}
+                    notification={notification}
                     refreshNotifications={refreshNotifications}
                     isOpen={openNotificationId === notification.id}
                     onToggle={handleToggleNotification}
@@ -412,14 +410,14 @@ const Notifications = ({ notifications, refreshNotifications }) => {
             </div>
           </div>
         )}
-        
+
         {activeTab === 'all' && (
           <div className="h-full overflow-y-auto px-4 py-4">
             {categorizedNotifications.read.length > 0 ? (
               categorizedNotifications.read.map((notification) => (
-                <Notification 
-                  key={notification.id} 
-                  notification={notification} 
+                <Notification
+                  key={notification.id}
+                  notification={notification}
                   refreshNotifications={refreshNotifications}
                   isOpen={openNotificationId === notification.id}
                   onToggle={handleToggleNotification}

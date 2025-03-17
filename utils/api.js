@@ -666,3 +666,40 @@ export const getInventoryItems = async () => {
       };
     }
   };
+
+
+  export const getEquipmentDetails = async (id) => {
+    try {
+      const response = await authenticatedRequest('get', `equipment/${id}/`);
+      return { 
+        success: true, 
+        data: response.data,
+        status: response.status
+      };
+    } catch (error) {
+      console.error('Update Error:', error.response?.data || error);
+      return {
+        success: false,
+        error: error.response?.data || 'Failed get equipment item',
+        status: error.response?.status
+      };
+    }
+  };
+
+  export const getEquipmentReport = async (id) => {
+    try {
+      const response = await authenticatedRequest('get', `equipment/${id}/maintenance-reports/`);
+      return { 
+        success: true, 
+        data: response.data,
+        status: response.status
+      };
+    } catch (error) {
+      console.error('Update Error:', error.response?.data || error);
+      return {
+        success: false,
+        error: error.response?.data || 'Failed get equipment item',
+        status: error.response?.status
+      };
+    }
+  };

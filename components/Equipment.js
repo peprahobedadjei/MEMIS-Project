@@ -30,18 +30,18 @@ export default function EquipmentAndSuppliers() {
     const [editingSupplier, setEditingSupplier] = useState(null);
     const [equipmentToEdit, setEquipmentToEdit] = useState(null);
     const openEquipEditModal = (equipment) => {
-  setEquipmentToEdit(equipment);
-  setIsEquipmentModalOpen(true);
-};
+        setEquipmentToEdit(equipment);
+        setIsEquipmentModalOpen(true);
+    };
 
-const handleAddNew = () => {
-    setEditingSupplier(null)
-    setIsSupplierModalOpen(true)
-  };
-  const handleAddNewEquipment = () => {
-    setEquipmentToEdit(null)
-    setIsEquipmentModalOpen(true)
-  };
+    const handleAddNew = () => {
+        setEditingSupplier(null)
+        setIsSupplierModalOpen(true)
+    };
+    const handleAddNewEquipment = () => {
+        setEquipmentToEdit(null)
+        setIsEquipmentModalOpen(true)
+    };
 
 
     // Data states
@@ -304,12 +304,12 @@ const handleAddNew = () => {
     const openEditModal = (supplier) => {
         setEditingSupplier(supplier);
         setIsSupplierModalOpen(true);
-      };
+    };
 
     const closeSupplierModal = () => {
         setIsSupplierModalOpen(false);
         setEditingSupplier(null);
-      };
+    };
 
     if (isLoading) {
         return (
@@ -634,6 +634,9 @@ const handleAddNew = () => {
                                                 Device Type
                                             </th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Report
+                                            </th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Action
                                             </th>
                                         </tr>
@@ -664,14 +667,19 @@ const handleAddNew = () => {
                                                     <td className="px-6 py-4 whitespace-nowrap  text-gray-500">
                                                         {formatDeviceType(equipment.device_type)}
                                                     </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap  text-gray-500">
+                                                    <a href={`/equipment-maintenance-reports/${equipment.id}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                                                       View
+                                                    </a>
+                                                    </td>
                                                     <td className="px-6 py-4 whitespace-nowrap  font-medium">
 
                                                         <div className='flex space-x-4 cursor-pointer'>
-                                                        <PencilIcon 
-  size={20} 
-  className="cursor-pointer"
-  onClick={() => openEquipEditModal(equipment)} 
-/>
+                                                            <PencilIcon
+                                                                size={20}
+                                                                className="cursor-pointer"
+                                                                onClick={() => openEquipEditModal(equipment)}
+                                                            />
                                                             <Trash2
                                                                 size={20}
                                                                 className='text-red-600'
@@ -748,15 +756,15 @@ const handleAddNew = () => {
                                     : `this ${deleteItemType}`
                             }
                         />
-      <EquipmentModal
-  isOpen={isEquipmentModalOpen}
-  onClose={() => {
-    setIsEquipmentModalOpen(false);
-    setEquipmentToEdit(null); // Reset equipment to edit on close
-  }}
-  onSave={handleAddSupplier}
-  equipment={equipmentToEdit} // Pass the equipment to edit
-/>
+                        <EquipmentModal
+                            isOpen={isEquipmentModalOpen}
+                            onClose={() => {
+                                setIsEquipmentModalOpen(false);
+                                setEquipmentToEdit(null); // Reset equipment to edit on close
+                            }}
+                            onSave={handleAddSupplier}
+                            equipment={equipmentToEdit} // Pass the equipment to edit
+                        />
                     </div>
                 )}
 
@@ -833,11 +841,11 @@ const handleAddNew = () => {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap  font-medium">
                                                     <div className='flex space-x-4 cursor-pointer'>
-                                                   
-    <PencilIcon 
-      size={20} 
-      onClick={() => openEditModal(supplier)}
-    />
+
+                                                        <PencilIcon
+                                                            size={20}
+                                                            onClick={() => openEditModal(supplier)}
+                                                        />
                                                         <Trash2
                                                             size={20}
                                                             className='text-red-600'
