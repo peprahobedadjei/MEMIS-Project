@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DownloadIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import Link from 'next/link';
 import Image from 'next/image';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -372,7 +373,7 @@ const Details = ({ equipmentDetails, equipmentReports, users, isLoading, error }
                     </button>
                 </div>
                 <div className="flex text-sm mb-4">
-                    <a href="/equipments" className="text-gray-500 hover:text-amber-500">Equipments</a>
+                    <Link href="/equipments" className="text-gray-500 hover:text-amber-500">Equipments</Link>
                     <span className="mx-2">/</span>
                     <span className="text-gray-700">{equipmentDetails.name}</span>
                 </div>
