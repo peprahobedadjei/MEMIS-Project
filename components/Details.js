@@ -416,7 +416,7 @@ const Details = () => {
     };
     return (
         <div className="max-w-screen-xl mx-auto p-4 min-h-screen">
-            <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
+            <div className="bg-white rounded-lg  p-4 mb-4">
                 <div className="flex justify-between items-center mb-2">
                     <h1 className="text-xl font-bold">{equipmentDetails.name}</h1>
                     <button     onClick={printEquipmentDetails} className="bg-amber-500 text-white px-3 py-1 rounded-md flex items-center text-sm">
@@ -433,7 +433,7 @@ const Details = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Left column */}
                 <div className="md:col-span-1">
-                    <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+                    <div className="bg-white rounded-lg p-4 mb-6">
                         <div className="flex mb-4">
                             <div className=" p-2 rounded-lg mr-4">
                                 {equipmentDetails.image ? (
@@ -539,7 +539,7 @@ const Details = () => {
 
                 {/* Right column */}
                 <div className="md:col-span-2">
-                    <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+                    <div className="bg-white rounded-lg  p-4 mb-6">
                         <div className="mb-4">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-sm font-semibold">Maintenance Report Overview</h3>
@@ -574,7 +574,7 @@ const Details = () => {
                     </div>
 
 
-                    <div className="bg-white rounded-lg shadow-sm p-4">
+                    <div className="bg-white rounded-lg  p-4">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-sm font-semibold">Maintenance Reports</h3>
                             <div className="flex items-center">
