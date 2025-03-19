@@ -1,12 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { DownloadIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-
-const Details = ({ equipmentDetails, equipmentReports, users, isLoading, error }) => {
+import { authenticatedRequest ,getEquipmentReport,getEquipmentDetails} from '../utils/api';
+const Details = () => {
+    const [id, setId] = useState(null);
+  const [equipmentDetails, setEquipmentDetails] = useState(null);
+  const [equipmentReports, setEquipmentReports] = useState(null);
+  const [users, setUsers] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+  useEffect(() => {
+    const storedId = sessionStorage.getItem('selectedEquipmentId');
+    if (storedId) {
+      setId(storedId); 
+      fetchEquipmentDetails(storedId);
+      fetchEquipmentReports(storedId);
+      fetchUsers();
+    }
+  }, []); 
+      
+      const fetchEquipmentDetails = async (equipmentId) => {
+        try {
+          const response = await getEquipmentDetails(equipmentId);
+          setEquipmentDetails(response.data);
+          console.log("Equipment details:", response);
+        } catch (err) {
+          setError('An error occurred while fetching equipment details');
+          console.error(err);
+        }
+      };
+      
+      const fetchEquipmentReports = async (equipmentId) => {
+        try {
+          const response = await getEquipmentReport(equipmentId);
+          setEquipmentReports(response.data);
+          console.log("Equipment reports:", response);
+        } catch (err) {
+          setError('An error occurred while fetching equipment reports');
+          console.error(err);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+        
+      const fetchUsers = async () => {
+        try {
+          const response = await authenticatedRequest('get', '/users/');
+          if (response && response.data) {
+            setUsers(response.data);
+          }
+        } catch (err) {
+          setError('Failed to fetch users');
+          console.error('Error fetching users:', err);
+        }
+      };
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(5);

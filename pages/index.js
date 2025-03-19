@@ -28,6 +28,7 @@ import Users from '@/components/Users';
 import Notifications from '@/components/Notifications';
 import MaintenanceSchedules from '@/components/MaintenanceSchedules';
 import Settings from '@/components/Settings';
+import Details from '@/components/Details';
 
 
 
@@ -52,6 +53,7 @@ function HomePage() {
     if (pathname === '/users') return 'Users';
     if (pathname === '/notifications') return 'Notifications';
     if (pathname === '/settings') return 'Settings';
+    if (pathname === '/details') return 'Details';
     return 'Dashboard'; // Default
   };
 
@@ -210,7 +212,6 @@ function HomePage() {
                 <BellIcon className="w-5 h-5" />
                 Notifications
               </button>
-
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 p-3 rounded-lg text-left w-full text-xs font-medium bg-white text-brandColor"
@@ -299,6 +300,10 @@ function HomePage() {
             )}
             {activePage === "Settings" && (
               <Settings/>
+
+            )}
+                        {activePage === "Details" && (
+              <Details/>
 
             )}
           </div>

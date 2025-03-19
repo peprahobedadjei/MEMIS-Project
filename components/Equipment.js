@@ -15,6 +15,7 @@ import {
     deleteEquipment
 } from '../utils/api';
 import { PencilIcon, Trash2 } from 'lucide-react';
+import Details from './Details';
 
 export default function EquipmentAndSuppliers() {
     const router = useRouter();
@@ -43,7 +44,14 @@ export default function EquipmentAndSuppliers() {
         setIsEquipmentModalOpen(true)
     };
 
-
+    const handleViewDetails = (id) => {
+        // Store the ID in session storage
+        sessionStorage.setItem('selectedEquipmentId', id);
+        
+        // Navigate to details page
+        router.push('/details');
+      };
+      
     // Data states
     const [equipmentList, setEquipmentList] = useState([]);
     const [suppliersList, setSuppliersList] = useState([]);
@@ -667,11 +675,14 @@ export default function EquipmentAndSuppliers() {
                                                     <td className="px-6 py-4 whitespace-nowrap  text-gray-500">
                                                         {formatDeviceType(equipment.device_type)}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap  text-gray-500">
-                                                    <a href={`/equipment-maintenance-reports/${equipment.id}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                                                       View
-                                                    </a>
-                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-gray-500">
+  <button 
+    onClick={() => handleViewDetails(equipment.id)} 
+    className="text-blue-500 hover:underline cursor-pointer"
+  >
+    View
+  </button>
+</td>
                                                     <td className="px-6 py-4 whitespace-nowrap  font-medium">
 
                                                         <div className='flex space-x-4 cursor-pointer'>
