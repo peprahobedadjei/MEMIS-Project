@@ -2,6 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { DownloadIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import ImageModal from './modals/ImageModal';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -22,6 +23,16 @@ const Details = () => {
       fetchUsers();
     }
   }, []); 
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleImageClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
       
       const fetchEquipmentDetails = async (equipmentId) => {
         try {
@@ -434,21 +445,38 @@ const Details = () => {
                 {/* Left column */}
                 <div className="md:col-span-1">
                     <div className="bg-white rounded-lg p-4 mb-6">
-                        <div className="flex mb-4">
+                        <div className="flex mb-4 cursor-pointer">
                             <div className=" p-2 rounded-lg mr-4">
-                                {equipmentDetails.image ? (
-                                    <Image
-                                        src={equipmentDetails.image}
-                                        alt={equipmentDetails.name}
-                                        width={80}
-                                        height={80}
-                                        className="object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-20 h-20 bg-amber-200 flex items-center justify-center text-amber-500 rounded-lg">
-                                        <span className="text-2xl">📊</span>
-                                    </div>
-                                )}
+                            {equipmentDetails.image ? (
+          <>
+            <div 
+              className="cursor-pointer" 
+              onClick={handleImageClick}
+            >
+              <Image
+                src={equipmentDetails.image}
+                alt={equipmentDetails.name}
+                width={80}
+                height={80}
+                className="object-cover"
+              />
+            </div>
+
+            {/* Modal that appears when image is clicked */}
+            {isModalOpen && (
+                  <ImageModal 
+                  isOpen={isModalOpen}
+                  onClose={handleCloseModal}
+                  imageUrl={equipmentDetails.image}
+                  altText={equipmentDetails.name}
+                />
+            )}
+          </>
+        ) : (
+          <div className="w-20 h-20 bg-amber-200 flex items-center justify-center text-amber-500 rounded-lg">
+            <span className="text-2xl">📊</span>
+          </div>
+        )}
                             </div>
                             <div>
                                 <h2 className="font-bold">{equipmentDetails.name}</h2>
