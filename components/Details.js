@@ -3,10 +3,13 @@ import { DownloadIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucid
 import Link from 'next/link';
 import Image from 'next/image';
 import ImageModal from './modals/ImageModal';
+import SingleReportModal from './modals/SingleReportModal';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { authenticatedRequest ,getEquipmentReport,getEquipmentDetails} from '../utils/api';
+import { authenticatedRequest ,getEquipmentReport,getEquipmentDetails,formatOperationalStatus} from '../utils/api';
+import { format } from 'date-fns';
+
 const Details = () => {
     const [id, setId] = useState(null);
   const [equipmentDetails, setEquipmentDetails] = useState(null);
@@ -23,15 +26,39 @@ const Details = () => {
       fetchUsers();
     }
   }, []); 
-
+    // Form fields
+    const [formFields, setFormFields] = useState({
+        equipment: '',
+        activity_type: '',
+        date_time: '',
+        technician: '',
+        pre_status: '',
+        post_status: '',
+        notes: ''
+    });
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+ const [showModal, setShowModal] = useState(false);
   const handleImageClick = () => {
     setIsModalOpen(true);
   };
-
+    const openAddModal = () => {
+        setFormFields({
+            equipment: '',
+            activity_type: '',
+            date: format(new Date(), 'yyyy-MM-dd'),
+            time: format(new Date(), 'HH:mm'),
+            technician: '',
+            pre_status: '',
+            post_status: '',
+            notes: ''
+        });
+        setShowModal(true);
+    };
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+  const closeModal = () => {
+    setShowModal(false);
   };
       
       const fetchEquipmentDetails = async (equipmentId) => {
@@ -622,7 +649,7 @@ const Details = () => {
                                             </option>
                                         ))}
                                     </select>
-                                    <button className="bg-amber-500 text-white px-3 py-1 rounded-md flex items-center text-xs">
+                                    <button   onClick={openAddModal} className="bg-amber-500 text-white px-3 py-1 rounded-md flex items-center text-xs">
                                         <PlusIcon size={16} className="mr-1" /> Add New
                                     </button>
                                 </div>
@@ -735,6 +762,10 @@ const Details = () => {
                     </div>
                 </div>
             </div>
+            <SingleReportModal
+                                    showModal={showModal}
+                                    closeModal={closeModal}
+                                />
         </div>
     );
 };

@@ -8,7 +8,7 @@ const ImageModal = ({
   imageUrl = '', 
   altText = '' 
 }) => {
-  // If isOpen is false or imageUrl is empty, don't render anything
+
   if (!isOpen || !imageUrl) return null;
 
   console.log(imageUrl)
