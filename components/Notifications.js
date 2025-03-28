@@ -209,7 +209,6 @@ const Notification = ({
       const url = `http://memis-90605b282646.herokuapp.com${relativePath}`;
 
       const response = await authenticatedRequest('get', relativePath);
-      console.log(response.data);
       setScheduleData(response.data);
       setIsModalOpen(true);
     } catch (error) {

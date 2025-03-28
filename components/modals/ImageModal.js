@@ -11,7 +11,6 @@ const ImageModal = ({
 
   if (!isOpen || !imageUrl) return null;
 
-  console.log(imageUrl)
 
   return (
     <div 

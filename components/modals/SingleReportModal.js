@@ -8,6 +8,7 @@ function SingleReportModal({ showModal, closeModal, onSuccess }) {
     const [technicianList, setTechnicianList] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
+    const [equipmentpreStatus, setEquipmentpreStatus] = useState('');
     const storedId = sessionStorage.getItem('selectedEquipmentId');
     // Field-specific validation errors
     const [fieldErrors, setFieldErrors] = useState({
@@ -52,6 +53,7 @@ function SingleReportModal({ showModal, closeModal, onSuccess }) {
         if (showModal) {
             fetchEquipmentList();
             fetchTechnicianList();
+            fetchAnEquipment();
             setFieldErrors({
                 equipment: null,
                 date_time: null,
@@ -70,6 +72,25 @@ function SingleReportModal({ showModal, closeModal, onSuccess }) {
             const response = await authenticatedRequest('get', '/equipment/');
             if (response && response.data) {
                 setEquipmentList(response.data);
+            }
+        } catch (err) {
+            console.error('Error fetching equipment list:', err);
+            setError('Failed to load equipment data');
+        }
+    };
+
+    const fetchAnEquipment = async () => {
+        try {
+            const response = await authenticatedRequest('get', `/equipment/${storedId}`);
+            if (response && response.data) {
+                // Set the equipment pre-status
+                setEquipmentpreStatus(response.data.operational_status);
+                
+                // Also update the formFields state to reflect this value
+                setFormFields(prevFields => ({
+                    ...prevFields,
+                    pre_status: response.data.operational_status
+                }));
             }
         } catch (err) {
             console.error('Error fetching equipment list:', err);
@@ -99,29 +120,29 @@ function SingleReportModal({ showModal, closeModal, onSuccess }) {
         });
 
 
-// When equipment is selected, fetch its status and set pre_status
-if (name === 'equipment' && value) {
-    const selectedEquipment = equipmentList.find(eq => eq.id.toString() === value);
-    if (selectedEquipment && selectedEquipment.operational_status) {
-        setFormFields(prev => ({
-            ...prev,
-            pre_status: selectedEquipment.operational_status
-        }));
-    }
-} else if (name === 'equipment' && !value) {
-    // Check if there's a stored ID in session storage
-    const storedId = sessionStorage.getItem('selectedEquipmentId');
-    if (storedId) {
-        const selectedEquipment = equipmentList.find(eq => eq.id.toString() === storedId);
-        if (selectedEquipment) {
-            setFormFields(prev => ({
-                ...prev,
-                equipment: storedId,
-                pre_status: selectedEquipment.operational_status
-            }));
+        // When equipment is selected, fetch its status and set pre_status
+        if (name === 'equipment' && value) {
+            const selectedEquipment = equipmentList.find(eq => eq.id.toString() === value);
+            if (selectedEquipment && selectedEquipment.operational_status) {
+                setFormFields(prev => ({
+                    ...prev,
+                    pre_status: selectedEquipment.operational_status
+                }));
+            }
+        } else if (name === 'equipment' && !value) {
+            // Check if there's a stored ID in session storage
+            const storedId = sessionStorage.getItem('selectedEquipmentId');
+            if (storedId) {
+                const selectedEquipment = equipmentList.find(eq => eq.id.toString() === storedId);
+                if (selectedEquipment) {
+                    setFormFields(prev => ({
+                        ...prev,
+                        equipment: storedId,
+                        pre_status: selectedEquipment.operational_status
+                    }));
+                }
+            }
         }
-    }
-}
         // Clear field error when user updates the field
         if (fieldErrors[name]) {
             setFieldErrors({
@@ -159,7 +180,7 @@ if (name === 'equipment' && value) {
             const isoDateTime = dateTime.toISOString();
 
             const reportData = {
-                equipment: formFields.equipment ? parseInt(formFields.equipment) : '',
+                equipment: storedId,
                 activity_type: formFields.activity_type,
                 date_time: isoDateTime,
                 technician: formFields.technician ? parseInt(formFields.technician) : '',
@@ -168,7 +189,7 @@ if (name === 'equipment' && value) {
                 notes: formFields.notes
             };
 
-            const response = await authenticatedRequest(`post`, `/maintenance-reports/${storedId}/`, reportData);
+            const response = await authenticatedRequest(`post`, `/equipment/${storedId}/maintenance-reports/`, reportData);
 
             if (response && response.status === 201) {
                 // Success! Close modal and notify parent component
@@ -282,19 +303,19 @@ if (name === 'equipment' && value) {
                                 Equipment Name <span className="text-red-500">*</span>
                             </label>
                             <select
-    name="equipment"
-    value={formFields.equipment || sessionStorage.getItem('selectedEquipmentId') || ''}
-    onChange={handleInputChange}
-    className={`w-full p-2 border rounded-md ${fieldErrors.equipment ? 'border-red-500' : ''}`}
-    required
->
-    <option value="">Select Equipment</option>
-    {equipmentList.map(equipment => (
-        <option key={equipment.id} value={equipment.id}>
-            {equipment.name}
-        </option>
-    ))}
-</select>
+                                name="equipment"
+                                value={formFields.equipment || sessionStorage.getItem('selectedEquipmentId') || ''}
+                                onChange={handleInputChange}
+                                className={`w-full p-2 border rounded-md ${fieldErrors.equipment ? 'border-red-500' : ''}`}
+                                required
+                            >
+                                <option value="">Select Equipment</option>
+                                {equipmentList.map(equipment => (
+                                    <option key={equipment.id} value={equipment.id}>
+                                        {equipment.name}
+                                    </option>
+                                ))}
+                            </select>
                             {fieldErrors.equipment && (
                                 <p className="text-red-500 text-xs mt-1">{fieldErrors.equipment}</p>
                             )}

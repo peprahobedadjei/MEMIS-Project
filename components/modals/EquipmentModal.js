@@ -74,7 +74,6 @@ const EquipmentModal = ({ isOpen, onClose, onSave, equipment }) => {
                 const response = await getSuppliersList();
                 if (response.success && Array.isArray(response.data)) {
                     setSuppliers(response.data);
-                    console.log("Suppliers List:", response.data);
                 } else {
                     console.error('Unexpected supplier response:', response);
                 }
@@ -170,11 +169,10 @@ const EquipmentModal = ({ isOpen, onClose, onSave, equipment }) => {
             );
 
             const data = await response.json();
-            console.log(`${fileType} upload response:`, data);
+
 
             if (data.secure_url) {
                 setFormData((prev) => ({ ...prev, [fileType]: data.secure_url }));
-                console.log(`${fileType} URL:`, data.secure_url);
                 return data.secure_url;
             } else if (data.error) {
                 setFileErrors(prev => ({ ...prev, [fileType]: `Upload failed: ${data.error.message}` }));
@@ -213,7 +211,6 @@ const EquipmentModal = ({ isOpen, onClose, onSave, equipment }) => {
 
         // First validate the form
         if (!validateForm()) {
-            console.log("Validation failed", errors);
             return;
         }
 
@@ -232,7 +229,6 @@ const EquipmentModal = ({ isOpen, onClose, onSave, equipment }) => {
             setUploading({ image: true, manual: true });
             try {
                 await Promise.all(uploadTasks);
-                console.log("All files uploaded successfully");
             } catch (error) {
                 console.error("Error uploading files:", error);
                 setUploading({ image: false, manual: false });
@@ -242,7 +238,6 @@ const EquipmentModal = ({ isOpen, onClose, onSave, equipment }) => {
         }
 
         // Log the final data being saved
-        console.log(`${equipment ? 'Updating' : 'Saving'} equipment with data:`, formData);
         const finalFormData = {
             ...formData,
             supplier: formData.supplier ? parseInt(formData.supplier, 10) : ''
@@ -255,13 +250,11 @@ const EquipmentModal = ({ isOpen, onClose, onSave, equipment }) => {
             if (equipment) {
                 // Call an update API function (you'll need to create this)
                 response = await updateEquipment(equipment.id, finalFormData);
-                console.log(equipment.id ,finalFormData)
             } else {
                 // Create equipment via existing API call
                 response = await createEquipment(finalFormData);
             }
             
-            console.log(`${equipment ? 'Update' : 'Create'} equipment response:`, response);
 
             if (response.success) {
                 if (onSave) {

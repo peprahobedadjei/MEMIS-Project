@@ -384,7 +384,6 @@ function Reports() {
                 const technicians = response.data.filter(user => user.user_role === 'Technician');
                 setTechnicianList(technicians);
             }
-            console.log(technicianList)
         } catch (err) {
             console.error('Error fetching technician list:', err);
         }

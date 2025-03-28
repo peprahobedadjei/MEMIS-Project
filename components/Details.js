@@ -14,6 +14,7 @@ const Details = () => {
     const [id, setId] = useState(null);
   const [equipmentDetails, setEquipmentDetails] = useState(null);
   const [equipmentReports, setEquipmentReports] = useState(null);
+
   const [users, setUsers] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -65,7 +66,6 @@ const Details = () => {
         try {
           const response = await getEquipmentDetails(equipmentId);
           setEquipmentDetails(response.data);
-          console.log("Equipment details:", response);
         } catch (err) {
           setError('An error occurred while fetching equipment details');
           console.error(err);
@@ -76,7 +76,6 @@ const Details = () => {
         try {
           const response = await getEquipmentReport(equipmentId);
           setEquipmentReports(response.data);
-          console.log("Equipment reports:", response);
         } catch (err) {
           setError('An error occurred while fetching equipment reports');
           console.error(err);
