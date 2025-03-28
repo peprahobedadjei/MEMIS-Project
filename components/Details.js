@@ -42,6 +42,18 @@ const Details = () => {
   const handleImageClick = () => {
     setIsModalOpen(true);
   };
+      // Function to reload data after successful operation
+      const refreshData = () => {
+        if (id) {
+            fetchEquipmentDetails(id);
+            fetchEquipmentReports(id);
+        }
+    };
+    const handleModalSuccess = () => {
+        closeModal();
+        refreshData();
+    };
+    
     const openAddModal = () => {
         setFormFields({
             equipment: '',
@@ -764,6 +776,9 @@ const Details = () => {
             <SingleReportModal
                                     showModal={showModal}
                                     closeModal={closeModal}
+                                    onSuccess={handleModalSuccess}
+                                    equipmentId={id}
+                                    preStatus={equipmentDetails?.operational_status} // Pass current status
                                 />
         </div>
     );

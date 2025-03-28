@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { authenticatedRequest } from '@/utils/api';
 import { XIcon } from 'lucide-react';
 
-function SingleReportModal({ showModal, closeModal, onSuccess }) {
+const SingleReportModal = ({ showModal, closeModal, onSuccess, equipmentId, preStatus }) => {
     const [equipmentList, setEquipmentList] = useState([]);
     const [technicianList, setTechnicianList] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,7 +16,7 @@ function SingleReportModal({ showModal, closeModal, onSuccess }) {
         date_time: null,
         technician: null,
         activity_type: null,
-        pre_status: null,
+        pre_status: preStatus || '',
         post_status: null,
         notes: null
     });
